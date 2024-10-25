@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    
+    {% load static %}
+    
+    <link rel="stylesheet" href="{% static './css/style.css' %}">
+    <title>DIOXX_666</title>
 </head>
 <body>
-    <img src="https://hips.hearstapps.com/hmg-prod/images/dewey-malcolm-fotogramas-1626112299.jpg" alt="El dui">
+    <main class="main-login">
+        <h1 class="titulo font-texto">DIOXX_666</h1>
+        <section class="form-login">
+            <input class="form-input" type="text" name="username" placeholder="Ingrese su usuario">
+            <input class="form-input" type="password" name="password" placeholder="Ingrese su contraseña">
+        
+            <button class="btn-global btn-login"><a href="{% url 'listRes' %}">Ingresar</a></button>
+        </section>
+    </main>
 </body>
 </html>
