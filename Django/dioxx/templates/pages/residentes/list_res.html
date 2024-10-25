@@ -14,30 +14,53 @@
     <title>DIOXX_666</title>
   </head>
   <body>
-    
     {% include "base/header.html" %}
 
-    <main class="main-list main-listRest">
-        <h1 class="font-texto titulo-res titulo-list">Listado de residentes</h1>
+    <main class="main-list main-listRes">
+      <h1 class="font-texto titulo-res titulo-list">Listado de residentes</h1>
 
-        <div class="buscador-list buscador-res">
-            <input type="search" name="busc-res" id="busc-res" placeholder="Ingrese el rut o apellido del residente">
-        </div>
-        <div class="table-list table-res">
-            <table class="font-texto">
-                <thead>
-                    <tr>
-                        <th>Rut</th> <th>Nombre</th> <th>Apellido</th> <th>Nro. de emergencia</th> <th>Ver información</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Residente</td> <td>Residente</td> <td>Residente</td> <td>Residente</td> <td><a href="#">Ver</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
+      <div class="buscador-list buscador-res">
+        <input
+          type="search"
+          name="busc-res"
+          id="busc-res"
+          placeholder="Ingrese el rut o apellido del residente"
+        />
+      </div>
+      <div class="table-list table-res">
+        <table class="font-texto">
+          <thead>
+            <tr>
+              <th>Rut</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Nro. de emergencia</th>
+              <th>Ver información</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for residente in residentes %}
+            <tr>
+              <td>{{ residente.rut }}</td>
+              <td>{{ residente.nombre }}</td>
+              <td>{{ residente.apellido }}</td>
+              <td>{{ residente.nroEmergencia }}</td>
+              <td><a href="{% url 'verRes' pk=residente.rut %}">Ver</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5">No hay residentes registrados.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="opcion-list opcion-res">
+        <a class="a-btn-global" href="{% url 'addRes' %}"
+          ><button class="btn-global btn-res btn-add">Agregar</button></a
+        >
+      </div>
     </main>
   </body>
 </html>

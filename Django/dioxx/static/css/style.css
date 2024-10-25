@@ -19,11 +19,42 @@ body {
 }
 
 /* Botones */
-.btn-global {
+.a-btn-global {
+    color: var();
+    text-decoration: none;
+
+    .btn-global {
+        border-radius: 0.3em 0.3em 0.3em 0.3em;
+        width: 10vw;
+        height: 4vh;
+        font-size: 1.2em;
+        font-weight: 600;
+        background-color: var(--amarillo);
+        color: var(--azul);
+        transition: all 0.3s ease-in-out;
+    
+        &:hover {
+            color: white;
+            cursor: pointer;
+        }
+    }
+}
+
+/* btn-Inputs */
+.inp-global {
     border-radius: 0.3em 0.3em 0.3em 0.3em;
     width: 10vw;
     height: 4vh;
     font-size: 1.2em;
+    font-weight: 600;
+    background-color: var(--amarillo);
+    color: var(--azul);
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        color: white;
+        cursor: pointer;
+    }
 }
 
 /* Header */
@@ -99,19 +130,10 @@ header nav {
             border-radius: 0.2em 0.2em 0.2em 0.2em;
             border: 0.2em solid var(--azul);
         }   
-
-        .btn-login {
-            background-color: var(--amarillo);
-            
-            a {
-                color: var(--azul);
-                font-weight: 600;
-            }
-        }
     }
 }
 
-/* Inicio - listRes */
+/* Inicio - listTable */
 .main-list {
     display: flex;
     flex-direction: column;
@@ -152,7 +174,97 @@ header nav {
 
             th, td {
                 border: 0.1em solid var(--azul); 
+                height: 4vh;
             }
         }
     }
+
+    .opcion-list {
+        display: flex;
+        justify-content: center;
+        
+        .btn-res {
+            margin-top: 1vh;
+        }
+    }
 }
+
+/* addRes - addTable */
+.main-res {
+    .volver-add {
+        text-align: end;
+        margin-right: 1vw;
+
+        a {
+            text-decoration: none;
+            color: var(--azul);
+
+            &:hover {
+                color: var(--amarillo);
+            }
+        }
+    }
+    
+    .info-top {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        margin-bottom: 15vh;
+
+        .img-res {
+            display: block;
+            background-color: gray;
+            border-radius: 0.2em 0.2em 0.2em 0.2em;
+            border-color: black;
+            width: 10vw;
+            height: 20vh;
+            margin-left: 10vw;
+            margin-right: 5vw;
+        }
+
+        .table-add {
+            border-collapse: collapse;
+
+            
+            tr td {
+                padding: 0.3em 5vw 0.3em 0;
+                border-bottom: 0.1em solid var(--azul);
+            }
+
+            tr .valor-campo {
+                text-align: center;
+                padding-right: 30vw;
+            }
+        }
+    }
+
+    .info-bottom {
+        .titulo-res-med {
+            margin-left: 5vw;
+        }
+
+        .table-res-med {
+            border-collapse: collapse;
+            margin-left: 5vw;
+
+            tr th,
+            tr td {
+                text-align: center;
+                padding: 0.6em 6vw 0.6em 6vw;
+                border-bottom: 0.1em solid var(--azul);
+            }
+        }
+    }
+
+    .opcion-add {
+        display: flex;
+        justify-content: end;
+        position: relative;
+        
+        .btn-res {
+            margin-right: 5vw;
+            margin-top: 5vh;
+        }
+    }
+}   
+    
