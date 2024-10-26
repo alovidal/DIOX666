@@ -30,6 +30,12 @@ urlpatterns = [
     path("delErm/<str:pk>", views.delErm, name="delErm"),
 
     # Accesos
+    path("listAcc/", views.listAcc, name="listAcc"),
+    path("addAcc/", views.addAcc, name="addAcc"),
+    path("verAcc/<str:pk>", views.verAcc, name="verAcc"),
+    path("findAcc/<str:pk>", views.findAcc, name="findAcc"),
+    path("updAcc/<str:pk>", views.updAcc, name="updAcc"),
+    path("delAcc/<str:pk>", views.delAcc, name="delAcc"),
 
     # Medicamentos
 

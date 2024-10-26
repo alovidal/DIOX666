@@ -343,3 +343,34 @@ header nav {
     }
 }
     
+/* Accesos */
+.main-erm {
+    .info-top {
+        .info-access {
+            .table-access {
+                margin-top: 10vh;
+                margin-bottom: 3vh;
+                text-align: center;
+
+                tr .campo-info {
+                    text-align: start;
+                }
+
+                tr .textarea-erm textarea {
+                    width: 20vw;
+                    height: 10vh;
+                }
+            }
+
+            .opcion-access {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                input {
+                    width: 12vw;
+                }
+            }
+        }
+    }
+}

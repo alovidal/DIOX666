@@ -37,6 +37,7 @@ def verRes(request, pk):
             "detalleR": det
         }
         return render(request, "pages/residentes/ver_res.html", context)
+    
 
 def addRes(request):
     if request.method == "POST": 
@@ -379,5 +380,134 @@ def delErm(request, pk):
         return render(request, "pages/emergencias/upd_erm.html", context)
 
 """ Accesos """
+def listAcc(request):
+    accesos = acceso.objects.all()
+    
+    context = {
+        "accesos": accesos
+    }
+    return render(request, "pages/accesos/list_acc.html", context)
+
+def addAcc(request):
+    if request.method == "POST":
+        # Obtener datos del formulario
+        fecha = request.POST["fecha"]
+        tipo = request.POST["tipo"]
+        personaRut = request.POST["personaRut"]
+        personaNombre = request.POST["personaNombre"]
+
+        # Crear una nueva instancia de acceso
+        nuevo_acceso = acceso(
+            fecha=fecha,
+            tipo=tipo,
+            personaRut=personaRut,
+            personaNombre=personaNombre
+        )
+        
+        # Guardar el nuevo acceso en la base de datos
+        nuevo_acceso.save()
+
+        # Obtener la lista actualizada de accesos
+        accesos = acceso.objects.all()
+        context = {
+            "accesos": accesos,
+            "mensaje": "Acceso agregado exitosamente"
+        }
+        return render(request, "pages/accesos/list_acc.html", context)
+
+    # Si no es POST, mostrar el formulario vacío
+    return render(request, "pages/accesos/add_acc.html")
+
+def verAcc(request, pk):
+    if pk != "":
+        acc = acceso.objects.get(idAcceso = pk)
+    
+        context = {
+            "acceso": acc
+        }
+        return render(request, "pages/accesos/ver_acc.html", context)
+
+def findAcc(request, pk):
+    if pk != "":
+        acc = acceso.objects.get(idAcceso = pk)
+
+        context = {
+            "acceso": acc
+        }
+        return render(request, "pages/accesos/upd_acc.html", context)
+
+def updAcc(request, pk):
+    if pk != "": 
+        if request.method == "POST":
+            fecha = request.POST["fecha"]
+            tipo = request.POST["tipo"]
+            personaRut = request.POST["personaRut"]
+            personaNombre = request.POST["personaNombre"]
+
+            # Busca el acceso por su id
+            try:
+                acc = acceso(
+                    idAcceso = pk,
+                    fecha = fecha,
+                    tipo = tipo,
+                    personaRut = personaRut,
+                    personaNombre = personaNombre
+                )
+                
+                acc.save()
+
+                mensaje = "Modificación exitosa"
+            except acceso.DoesNotExist:
+                acc = None
+                mensaje = "Acceso no encontrado"
+            
+            context = {
+                "acceso": acc,
+                "mensaje": mensaje
+            }
+            return render(request, "pages/accesos/upd_acc.html", context) 
+        else:
+            try:
+                acc = acceso.objects.get(idAcceso=pk)
+                mensaje = ""
+            except acceso.DoesNotExist:
+                acc = None
+                mensaje = "Acceso no encontrado"
+            
+            context = {
+                "acceso": acc,
+                "mensaje": mensaje
+            }
+            return render(request, "pages/accesos/upd_acc.html", context) 
+    
+    else:
+        mensaje = "ID de acceso no válido"
+        context = {
+            "acceso": None,
+            "mensaje": mensaje
+        }
+        return render(request, "pages/accesos/upd_acc.html", context)
+
+def delAcc(request, pk):
+    try:
+        # Intenta obtener el objeto Acceso y eliminarlo
+        acc = acceso.objects.get(idAcceso=pk)
+        acc.delete()
+
+        # Obtiene todos los accesos restantes
+        accs = acceso.objects.all()
+
+        # Renderiza la lista de accesos actualizada
+        context = {
+            "accesos": accs
+        }
+        return render(request, "pages/accesos/list_acc.html", context)
+
+    except acceso.DoesNotExist:
+        # En caso de error, prepara el contexto con un mensaje de error
+        context = {
+            "mensaje": "No se pudo eliminar el acceso"
+        }
+        return render(request, "pages/accesos/upd_acc.html", context)
 
 """ Medicamentos """
