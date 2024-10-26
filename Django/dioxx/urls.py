@@ -22,6 +22,12 @@ urlpatterns = [
     path("delPer/<str:pk>", views.delPer, name="delPer"),
 
     # Emergencias
+    path("listErm/", views.listErm, name="listErm"),
+    path("addErm/", views.addErm, name="addErm"),
+    path("verErm/<str:pk>", views.verErm, name="verErm"),
+    path("findErm/<str:pk>", views.findErm, name="findErm"),
+    path("updErm/<str:pk>", views.updErm, name="updErm"),
+    path("delErm/<str:pk>", views.delErm, name="delErm"),
 
     # Accesos
 

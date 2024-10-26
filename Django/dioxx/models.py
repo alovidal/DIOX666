@@ -10,7 +10,7 @@ class residente(models.Model):
     nroEmergencia = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.rut
+        return self.nombre+" "+self.apellido
     
 class receta(models.Model):
     idReceta = models.AutoField(primary_key=True, db_column="idReceta")
@@ -34,7 +34,7 @@ class detalleReceta(models.Model):
     horario = models.CharField(max_length=20)
     
     def __str__(self):
-        return str(self.idDetalleR)
+        return str(self.idReceta)
 
 class cargoPersonal(models.Model):
     idCargo = models.CharField(max_length=6, primary_key=True, db_column="idCargo")
@@ -50,4 +50,13 @@ class personal(models.Model):
     cargo = models.ForeignKey("cargoPersonal", on_delete=models.CASCADE, db_column="idCargo")
     
     def __str__(self):
-        return self.rut
+        return self.nombre+" "+self.apellido
+    
+class emergencia(models.Model):
+    idEmergencia = models.AutoField(primary_key=True, db_column="idEmergencia")
+    residente = models.ForeignKey("residente", on_delete=models.CASCADE, db_column="rut")
+    fecha = models.DateField()
+    descripcion = models.CharField(max_length=1000)
+
+    def __str__(self) :
+        return str(self.residente)

@@ -189,7 +189,7 @@ header nav {
     }
 }
 
-/* addRes - addTable */
+/* Residentes */
 .main-res {
     .volver-add {
         text-align: end;
@@ -269,6 +269,7 @@ header nav {
     }
 }  
 
+/* Personal */
 .main-per {
     .info-top {
         display: flex;
@@ -307,6 +308,38 @@ header nav {
             margin-top: 2vh;
         }
 
+    }
+}
+
+/* Emergencias */
+.main-erm {
+    .info-top {
+        .info-erm {
+            .table-erm {
+                margin-top: 10vh;
+                margin-bottom: 3vh;
+                text-align: center;
+
+                tr .campo-info {
+                    text-align: start;
+                }
+
+                tr .textarea-erm textarea {
+                    width: 20vw;
+                    height: 10vh;
+                }
+            }
+
+            .opcion-erm {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                input {
+                    width: 12vw;
+                }
+            }
+        }
     }
 }
     

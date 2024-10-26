@@ -258,6 +258,125 @@ def delPer(request, pk):
         return render(request, "pages/personal/upd_per.html", context)
 
 """ Emergencias """
+def listErm(request):
+    emergencias = emergencia.objects.all()
+
+    context = {
+        "emergencias": emergencias
+    }
+    return render(request, "pages/emergencias/list_erm.html", context)
+
+def addErm(request):
+    if request.method == "POST":
+        res = request.POST["residente"]
+        fecha = request.POST["fecha"]
+        descripcion = request.POST["descripcion"]
+
+        residente_obj = residente.objects.get(rut=res)
+
+        nueva_emergencia = emergencia(
+            residente=residente_obj,
+            fecha=fecha,
+            descripcion=descripcion
+        )
+        nueva_emergencia.save()
+
+        emergencias = emergencia.objects.all()
+        context = {
+            "emergencias": emergencias,
+        }
+        return render(request, "pages/emergencias/list_erm.html", context) 
+
+    # Respuesta para el caso GET
+    residentes = residente.objects.all()
+    context = {
+        "residentes": residentes,
+    }
+    return render(request, "pages/emergencias/add_erm.html", context)
+
+def verErm(request, pk):
+    if pk != "":
+        erm = emergencia.objects.get(idEmergencia = pk)
+
+        context = {
+            "emergencia": erm
+        }
+        return render(request, "pages/emergencias/ver_erm.html", context)
+
+def findErm(request, pk):
+    if pk != "":
+        erm = emergencia.objects.get(idEmergencia = pk)
+        res = residente.objects.all()
+
+        context = {
+            "emergencia": erm,
+            "residentes": res
+        }
+        return render(request, "pages/emergencias/upd_erm.html", context)
+        
+def updErm(request, pk):
+    if pk != "": 
+        if request.method == "POST":
+            res = request.POST["residente"]
+            fecha = request.POST["fecha"]
+            descripcion = request.POST["descripcion"]
+
+            residente_obj = residente.objects.get(rut=res)
+
+            erm = emergencia(
+                idEmergencia = pk,
+                residente=residente_obj,
+                fecha=fecha,
+                descripcion=descripcion
+            )
+            erm.save()
+
+            res = residente.objects.all()
+            context = {
+                "emergencia": erm,
+                "residentes": res,
+                "mensaje": "Modificacion exitosa"
+            }
+            return render(request, "pages/emergencias/upd_erm.html", context) 
+        else:
+            ermm = emergencia.objects.get(idEmergencia = pk)
+            ress = residente.objects.all()
+            context = {
+                "emergencia": ermm,
+                "residentes": ress,
+                "mensaje": "Error al modificar la emergencia"
+            }
+            return render(request, "pages/emergencias/upd_erm.html", context) 
+    
+    else:
+        ermm = emergencia.objects.get(idEmergencia = pk)
+        ress = residente.objects.all()
+        context = {
+            "emergencia": ermm,
+            "residentes": ress,
+            "mensaje": "Error al modificar la emergencia"
+        }
+        return render(request, "pages/emergencias/upd_erm.html", context) 
+
+def delErm(request, pk):
+    try:
+        erm = emergencia.objects.get(idEmergencia = pk)
+        erm.delete()
+
+        emergencias = emergencia.objects.all()
+
+        context = {
+            "emergencias": emergencias
+        }
+        return render(request, "pages/emergencias/list_erm.html", context)
+    except:
+        erm = emergencia.objects.get(idEmergencia = pk)
+
+        context = {
+            "emergencias": erm,
+            "mensaje": "No se pudo eliminar la emergencia"
+        }
+        return render(request, "pages/emergencias/upd_erm.html", context)
 
 """ Accesos """
 
