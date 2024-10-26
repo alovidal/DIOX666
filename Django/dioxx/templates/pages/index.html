@@ -8,15 +8,29 @@
     
     <link rel="stylesheet" href="{% static './css/style.css' %}">
     <title>DIOXX_666</title>
+    <style>
+        .error {
+            color: red; /* Color para el mensaje de error */
+            font-weight: bold;
+            margin-bottom: 20px; /* Espacio inferior para separar del formulario */
+        }
+    </style>
 </head>
 <body>
     <main class="main-login">
         <h1 class="titulo font-texto">DIOXX_666</h1>
         <section class="form-login">
-            <input class="form-input" type="text" name="username" placeholder="Ingrese su usuario">
-            <input class="form-input" type="password" name="password" placeholder="Ingrese su contraseña">
-            <a class="a-btn-global" href="{% url 'listRes' %}"><button class="btn-global btn-login">Ingresar</button></a>
-            
+            {% if mensaje %}
+                <div class="error">
+                    {{ mensaje }}
+                </div>
+            {% endif %}
+            <form method="POST" action="{% url 'login' %}" >
+                {% csrf_token %}
+                <input class="form-input" type="text" name="username" placeholder="Ingrese su usuario"  style="margin-bottom: 2vh;" required>
+                <input class="form-input" type="password" name="password" placeholder="Ingrese su contraseña" required>
+                <button type="submit" class="btn-global btn-login inp-global">Ingresar</button>
+            </form>
         </section>
     </main>
 </body>

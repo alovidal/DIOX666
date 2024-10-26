@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from .models import *
 
 # Create your views here.
@@ -9,6 +13,9 @@ from .models import *
         user: dioxx
         password: dioxx_666
     
+    Testing:
+        user: testing
+        password: dioxx_666
 """
 
 """ General """
@@ -24,7 +31,37 @@ def notificaciones(request):
     }
     return render(request, "pages/notificaciones.html", context)
 
+def conectar(request):
+    # Si el usuario no está logeado puede logearse
+    if not request.user.is_authenticated:
+        if request.method == "POST":
+            username = request.POST["username"]
+            password = request.POST["password"]
+
+            # Verificar las credenciales
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)  # Iniciar sesión
+                return redirect('listRes')  # Redirige a la lista de residentes
+            else:
+                context = {
+                    "mensaje": "Usuario o contraseña incorrecta.",
+                    "design": "error"  # Puedes usar esta clase para estilizar tu mensaje
+                }
+                return render(request, "pages/index.html", context)
+        else:
+            return render(request, "pages/index.html")
+    else:
+        return redirect('listRes')  # Si ya está logueado, redirige a la lista de residentes
+
+def desconectar(request):
+    if request.user.is_authenticated:
+        logout(request)  # Cerrar sesión
+        return redirect('index')  # Redirigir al índice después de cerrar sesión
+    return redirect('index')  # Redirigir al índice si no está autenticado
+
 """ Residentes """
+@login_required
 def listRes(request):
     residentes = residente.objects.all()
 
@@ -34,6 +71,7 @@ def listRes(request):
 
     return render(request, "pages/residentes/list_res.html", context)
 
+@login_required
 def verRes(request, pk):
     if pk != "":
         res = get_object_or_404(residente, rut=pk)
@@ -51,6 +89,7 @@ def verRes(request, pk):
         }
         return render(request, "pages/residentes/ver_res.html", context)
 
+@login_required
 def addRes(request):
     if request.method == "POST": 
         # Crear el residente
@@ -99,7 +138,8 @@ def addRes(request):
     
     # Respuesta para el caso GET
     return render(request, "pages/residentes/add_res.html")
-    
+
+@login_required    
 def findRes(request, pk):
     if pk != "":
         res = get_object_or_404(residente, rut=pk)
@@ -117,6 +157,7 @@ def findRes(request, pk):
         }
         return render(request, "pages/residentes/upd_res.html", context)
 
+@login_required
 def updRes(request):
     if request.method == "POST": 
         rRut = request.POST["rut"]
@@ -150,7 +191,8 @@ def updRes(request):
             "mensaje": "Modificación exitosa"
         }
         return render(request, "pages/residentes/upd_res.html", context)
-       
+
+@login_required       
 def delRes(request, pk):
     try:
         res = get_object_or_404(residente, rut=pk)
@@ -184,6 +226,7 @@ def delRes(request, pk):
         return render(request, "pages/residentes/upd_res.html", context)
 
 """ Personal """
+@login_required 
 def listPer(request):
     personas = personal.objects.all()
 
@@ -193,6 +236,7 @@ def listPer(request):
 
     return render(request, "pages/personal/list_per.html", context)
 
+@login_required 
 def verPer(request, pk):
     if pk != "":
         per = personal.objects.get(rut = pk)
@@ -201,7 +245,8 @@ def verPer(request, pk):
             "persona": per,
         }
         return render(request, "pages/personal/ver_per.html", context)
-    
+
+@login_required     
 def addPer(request):
     if request.method == "POST":
         pRut = request.POST["rut"]
@@ -233,6 +278,7 @@ def addPer(request):
     cargos = cargoPersonal.objects.all()  # Obtener todos los cargos
     return render(request, "pages/personal/add_per.html", {"cargos": cargos})
 
+@login_required 
 def findPer(request, pk):
     if pk != "":
         per = personal.objects.get(rut = pk)
@@ -244,6 +290,7 @@ def findPer(request, pk):
         }
         return render(request, "pages/personal/upd_per.html", context)
 
+@login_required 
 def updPer(request):
     if request.method == "POST":
         pRut = request.POST["rut"]
@@ -270,6 +317,7 @@ def updPer(request):
         }
         return render(request, "pages/personal/upd_per.html", context)
 
+@login_required 
 def delPer(request, pk):
     try:
         per = personal.objects.get(rut = pk)
@@ -291,6 +339,7 @@ def delPer(request, pk):
         return render(request, "pages/personal/upd_per.html", context)
 
 """ Emergencias """
+@login_required 
 def listErm(request):
     emergencias = emergencia.objects.all()
 
@@ -299,6 +348,7 @@ def listErm(request):
     }
     return render(request, "pages/emergencias/list_erm.html", context)
 
+@login_required 
 def addErm(request):
     if request.method == "POST":
         res = request.POST["residente"]
@@ -327,6 +377,7 @@ def addErm(request):
     }
     return render(request, "pages/emergencias/add_erm.html", context)
 
+@login_required 
 def verErm(request, pk):
     if pk != "":
         erm = emergencia.objects.get(idEmergencia = pk)
@@ -336,6 +387,7 @@ def verErm(request, pk):
         }
         return render(request, "pages/emergencias/ver_erm.html", context)
 
+@login_required 
 def findErm(request, pk):
     if pk != "":
         erm = emergencia.objects.get(idEmergencia = pk)
@@ -346,7 +398,8 @@ def findErm(request, pk):
             "residentes": res
         }
         return render(request, "pages/emergencias/upd_erm.html", context)
-        
+
+@login_required         
 def updErm(request, pk):
     if pk != "": 
         if request.method == "POST":
@@ -391,6 +444,7 @@ def updErm(request, pk):
         }
         return render(request, "pages/emergencias/upd_erm.html", context) 
 
+@login_required 
 def delErm(request, pk):
     try:
         erm = emergencia.objects.get(idEmergencia = pk)
@@ -412,6 +466,7 @@ def delErm(request, pk):
         return render(request, "pages/emergencias/upd_erm.html", context)
 
 """ Accesos """
+@login_required 
 def listAcc(request):
     accesos = acceso.objects.all()
     
@@ -420,6 +475,7 @@ def listAcc(request):
     }
     return render(request, "pages/accesos/list_acc.html", context)
 
+@login_required 
 def addAcc(request):
     if request.method == "POST":
         # Obtener datos del formulario
@@ -450,6 +506,7 @@ def addAcc(request):
     # Si no es POST, mostrar el formulario vacío
     return render(request, "pages/accesos/add_acc.html")
 
+@login_required 
 def verAcc(request, pk):
     if pk != "":
         acc = acceso.objects.get(idAcceso = pk)
@@ -459,6 +516,7 @@ def verAcc(request, pk):
         }
         return render(request, "pages/accesos/ver_acc.html", context)
 
+@login_required 
 def findAcc(request, pk):
     if pk != "":
         acc = acceso.objects.get(idAcceso = pk)
@@ -468,6 +526,7 @@ def findAcc(request, pk):
         }
         return render(request, "pages/accesos/upd_acc.html", context)
 
+@login_required 
 def updAcc(request, pk):
     if pk != "": 
         if request.method == "POST":
@@ -520,6 +579,7 @@ def updAcc(request, pk):
         }
         return render(request, "pages/accesos/upd_acc.html", context)
 
+@login_required 
 def delAcc(request, pk):
     try:
         # Intenta obtener el objeto Acceso y eliminarlo
@@ -543,6 +603,7 @@ def delAcc(request, pk):
         return render(request, "pages/accesos/upd_acc.html", context)
 
 """ Eventos """
+@login_required 
 def listEvt(request):
     evts = evento.objects.all()
 
@@ -551,6 +612,7 @@ def listEvt(request):
     }
     return render(request, "pages/eventos/list_evt.html", context)
 
+@login_required 
 def addEvt(request):
     if request.method == "POST":
         # Obtener datos del formulario
@@ -581,6 +643,7 @@ def addEvt(request):
     # Si no es POST, mostrar el formulario vacío
     return render(request, "pages/eventos/add_evt.html")
 
+@login_required 
 def verEvt(request, pk):
     if pk:
         evento_obj = evento.objects.get(idEvento=pk)
@@ -590,6 +653,7 @@ def verEvt(request, pk):
         }
         return render(request, "pages/eventos/ver_evt.html", context)
 
+@login_required 
 def findEvt(request, pk):
     if pk:
         evento_obj = evento.objects.get(idEvento=pk)
@@ -599,6 +663,7 @@ def findEvt(request, pk):
         }
         return render(request, "pages/eventos/upd_evt.html", context)
 
+@login_required 
 def updEvt(request, pk):
     if pk: 
         if request.method == "POST":
@@ -648,6 +713,7 @@ def updEvt(request, pk):
         }
         return render(request, "pages/eventos/upd_evento.html", context)
 
+@login_required 
 def delEvt(request, pk):
     try:
         # Intenta obtener el objeto Evento y eliminarlo
@@ -670,15 +736,18 @@ def delEvt(request, pk):
         }
         return render(request, "pages/eventos/upd_evt.html", context)
 
+@login_required 
 def calendario_eventos(request):
     eventos = evento.objects.all()
     return render(request, 'pages/eventos/calendario_eventos.html', {'eventos': eventos})
 
 """ Medicamentos """
+@login_required 
 def opcMed(request):
     context = {}
     return render(request, "pages/medicamentos/opc_med.html", context)
 
+@login_required 
 def listMed(request):
     meds = medicamento.objects.all()
 
@@ -687,6 +756,7 @@ def listMed(request):
     }
     return render(request, "pages/medicamentos/list_med.html", context)
 
+@login_required 
 def addMed(request):
     mensaje = ""
     if request.method == "POST":
@@ -703,6 +773,7 @@ def addMed(request):
     }
     return render(request, "pages/medicamentos/add_med.html", context)
 
+@login_required 
 def verMed(request, pk):
     if pk:
         medicamento_obj = medicamento.objects.get(idMedicamento=pk)
@@ -712,6 +783,7 @@ def verMed(request, pk):
         }
         return render(request, "pages/medicamentos/ver_med.html", context)
 
+@login_required 
 def findMed(request, pk):
     if pk != "":
         med = medicamento.objects.get(idMedicamento = pk)
@@ -721,6 +793,7 @@ def findMed(request, pk):
         }
         return render(request, "pages/medicamentos/upd_med.html", context)
 
+@login_required 
 def updMed(request, pk):
     if pk: 
         if request.method == "POST":
@@ -750,6 +823,7 @@ def updMed(request, pk):
         }
         return render(request, "pages/medicamentos/upd_med.html", context)
 
+@login_required 
 def delMed(request, pk):
     try:
         # Intenta obtener el objeto Medicamento y eliminarlo
@@ -771,35 +845,52 @@ def delMed(request, pk):
         }
         return render(request, "pages/medicamentos/upd_med.html", context)
 
+@login_required 
 def listResMedicamentos(request):
-    residentes = residente.objects.all()
+    # Inicializar listas vacías para residentes, detalles, recetas y medicamentos
+    residentes = []  # Puedes mantener la consulta a la base de datos si decides utilizarla más adelante
     datos_residentes = []
 
-    for res in residentes:
-        try:
-            rec = receta.objects.get(residente=res)
-            detalles = detalleReceta.objects.filter(idReceta=rec)
-            medicamentos = []
-            for detalle in detalles:
-                medicamento_info = {
-                    'nombre': detalle.idMedicamento.nombre,
-                    'dosis_m': detalle.cantDosis if not detalle.horario.endswith('t') else 'No',
-                    'dosis_t': detalle.cantDosis if detalle.horario.endswith('t') else 'No',
-                    'dosis_n': detalle.cantDosis if detalle.horario.endswith('n') else 'No',
-                }
-                medicamentos.append(medicamento_info)
+    # Si decides mantener la consulta a residentes:
+    # residentes = residente.objects.all()
 
-            datos_residentes.append({
-                'residente': res,
-                'medicamentos': medicamentos
-            })
-        except receta.DoesNotExist:
-            datos_residentes.append({
-                'residente': res,
-                'medicamentos': []
-            })
+    # Agregar la lógica para agregar residentes vacíos a datos_residentes
+    for res in residentes:
+        datos_residentes.append({
+            'residente': res,
+            'medicamentos': []  # Array vacío para medicamentos
+        })
 
     context = {
-        'datos_residentes': datos_residentes
+        'datos_residentes': datos_residentes  # Mantener datos_residentes como está
     }
     return render(request, "pages/medicamentos/list_res_medicamentos.html", context)
+
+@login_required 
+def dosis(request):
+    # Obtener todos los medicamentos
+    medicamentos = medicamento.objects.all()
+    datos_medicamentos = []
+
+    for med in medicamentos:
+        # Obtener detalles de receta para el medicamento actual
+        detalles = detalleReceta.objects.filter(idMedicamento=med)
+        residentes_con_medicamento = []
+
+        for detalle in detalles:
+            residente_obj = detalle.idReceta.residente  # Obtener el residente asociado a la receta
+            residentes_con_medicamento.append({
+                'rut': residente_obj.rut,
+                'nombre': f"{residente_obj.nombre} {residente_obj.apellido}",
+                'dosis': ""  # Campo de dosis vacío
+            })
+
+        datos_medicamentos.append({
+            'medicamento': med.nombre,
+            'residentes': residentes_con_medicamento
+        })
+
+    context = {
+        'datos_medicamentos': datos_medicamentos
+    }
+    return render(request, "pages/medicamentos/dosis.html", context)

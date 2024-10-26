@@ -88,3 +88,13 @@ class evento(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+class Dosis(models.Model):
+    idDosis = models.AutoField(primary_key=True, db_column="idDosis")
+    medicamento = models.ForeignKey("medicamento", on_delete=models.CASCADE, db_column="idMedicamento")
+    horario = models.CharField(max_length=1, choices=[('m', 'Mañana'), ('t', 'Tarde'), ('n', 'Noche')])
+    cantidad = models.PositiveIntegerField()
+    administrada = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return str(self.idDosis)

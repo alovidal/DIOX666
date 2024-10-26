@@ -109,11 +109,12 @@ header nav {
         color: var(--azul);
     }
 
-    .form-login {
+    form {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        margin-top: 10vh;
 
         :first-child {
             margin-top: 10vh;

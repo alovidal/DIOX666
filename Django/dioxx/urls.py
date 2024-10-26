@@ -5,6 +5,8 @@ urlpatterns = [
     # General
     path("", views.index, name="index"),
     path("notificaciones", views.notificaciones, name="notificaciones"),
+    path('login/', views.conectar, name='login'),
+    path('logout/', views.desconectar, name='logout'),
 
     # Residentes
     path("listRes/", views.listRes, name="listRes"),
@@ -56,5 +58,5 @@ urlpatterns = [
     path("updMed/<str:pk>", views.updMed, name="updMed"),
     path("delMed/<str:pk>", views.delMed, name="delMed"),
     path("listResMedicamentos/", views.listResMedicamentos, name="listResMedicamentos"),
-
+    path('dosis/', views.dosis, name='dosis'),
 ]
