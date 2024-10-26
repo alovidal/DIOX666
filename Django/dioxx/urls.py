@@ -49,5 +49,11 @@ urlpatterns = [
 
     # Medicamentos
     path("opcMed/", views.opcMed, name="opcMed"),
+    path('listMed/', views.listMed, name='listMed'),
+    path("addMed/", views.addMed, name="addMed"),
+    path("verMed/<str:pk>", views.verMed, name="verMed"),
+    path("findMed/<str:pk>", views.findMed, name="findMed"),
+    path("updMed/<str:pk>", views.updMed, name="updMed"),
+    path("delMed/<str:pk>", views.delMed, name="delMed"),
 
 ]

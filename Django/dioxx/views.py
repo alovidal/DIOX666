@@ -654,3 +654,95 @@ def calendario_eventos(request):
 def opcMed(request):
     context = {}
     return render(request, "pages/medicamentos/opc_med.html", context)
+
+def listMed(request):
+    meds = medicamento.objects.all()
+
+    context = {
+        "medicamentos": meds 
+    }
+    return render(request, "pages/medicamentos/list_med.html", context)
+
+def addMed(request):
+    mensaje = ""
+    if request.method == "POST":
+        nombre = request.POST["nombre"]
+
+        # Crea un nuevo medicamento
+        medicamento_obj = medicamento(nombre=nombre)
+        medicamento_obj.save()
+        
+        mensaje = "Medicamento agregado exitosamente"
+    
+    context = {
+        "mensaje": mensaje
+    }
+    return render(request, "pages/medicamentos/add_med.html", context)
+
+def verMed(request, pk):
+    if pk:
+        medicamento_obj = medicamento.objects.get(idMedicamento=pk)
+        
+        context = {
+            "medicamento": medicamento_obj
+        }
+        return render(request, "pages/medicamentos/ver_med.html", context)
+
+def findMed(request, pk):
+    if pk != "":
+        med = medicamento.objects.get(idMedicamento = pk)
+
+        context = {
+            "medicamento": med
+        }
+        return render(request, "pages/medicamentos/upd_med.html", context)
+
+def updMed(request, pk):
+    if pk: 
+        if request.method == "POST":
+            nombre = request.POST["nombre"]
+
+            # Busca el medicamento por su id
+            try:
+                medicamento_obj = medicamento.objects.get(idMedicamento=pk)
+                medicamento_obj.nombre = nombre
+                medicamento_obj.save()
+
+                mensaje = "Modificación exitosa"
+            except medicamento.DoesNotExist:
+                medicamento_obj = None
+                mensaje = "Medicamento no encontrado"
+            
+            context = {
+                "medicamento": medicamento_obj,
+                "mensaje": mensaje
+            }
+            return render(request, "pages/medicamentos/upd_med.html", context)
+    else:
+        mensaje = "ID de medicamento no válido"
+        context = {
+            "medicamento": None,
+            "mensaje": mensaje
+        }
+        return render(request, "pages/medicamentos/upd_med.html", context)
+
+def delMed(request, pk):
+    try:
+        # Intenta obtener el objeto Medicamento y eliminarlo
+        medicamento_obj = medicamento.objects.get(idMedicamento=pk)
+        medicamento_obj.delete()
+
+        # Renderiza la lista de medicamentos actualizada
+        medicamentos = medicamento.objects.all()
+        context = {
+            "medicamentos": medicamentos,
+            "mensaje": "Medicamento eliminado exitosamente"
+        }
+        return render(request, "pages/medicamentos/list_med.html", context)
+
+    except medicamento.DoesNotExist:
+        # En caso de error, prepara el contexto con un mensaje de error
+        context = {
+            "mensaje": "No se pudo eliminar el medicamento"
+        }
+        return render(request, "pages/medicamentos/upd_med.html", context)
