@@ -70,3 +70,11 @@ class acceso(models.Model):
 
     def __str__(self):
         return str(self.idAcceso)
+    
+class notificacion(models.Model):
+    idNotificacion = models.AutoField(primary_key=True, db_column="idNotificacion")
+    fecha = models.DateField()
+    descripcion = models.CharField(max_length=200)
+
+    def __str__(self):
+        return str(self.idNotificacion)

@@ -15,6 +15,14 @@ def index(request):
     context = {}
     return render(request, "pages/index.html", context)
 
+def notificaciones(request):
+    noti = notificacion.objects.all()
+
+    context = {
+        "notificaciones": noti 
+    }
+    return render(request, "pages/notificaciones.html", context)
+
 """ Residentes """
 def listRes(request):
     residentes = residente.objects.all()

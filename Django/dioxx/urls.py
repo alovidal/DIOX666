@@ -4,6 +4,7 @@ from dioxx import views
 urlpatterns = [
     # General
     path("", views.index, name="index"),
+    path("notificaciones", views.notificaciones, name="notificaciones"),
 
     # Residentes
     path("listRes/", views.listRes, name="listRes"),
