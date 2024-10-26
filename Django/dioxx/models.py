@@ -35,3 +35,19 @@ class detalleReceta(models.Model):
     
     def __str__(self):
         return str(self.idDetalleR)
+
+class cargoPersonal(models.Model):
+    idCargo = models.CharField(max_length=6, primary_key=True, db_column="idCargo")
+    descripcion = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return self.descripcion
+
+class personal(models.Model):
+    rut = models.CharField(max_length=12, primary_key=True, db_column="rut")
+    nombre = models.CharField(max_length=80)
+    apellido = models.CharField(max_length=80)
+    cargo = models.ForeignKey("cargoPersonal", on_delete=models.CASCADE, db_column="idCargo")
+    
+    def __str__(self):
+        return self.rut

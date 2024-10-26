@@ -87,7 +87,6 @@ def addRes(request):
     # Respuesta para el caso GET
     return render(request, "pages/residentes/add_res.html")
     
-
 def findRes(request, pk):
     if pk != "":
         res = residente.objects.get(rut = pk)
@@ -151,8 +150,112 @@ def delRes(request, pk):
         }
         return render(request, "pages/residentes/upd_res.html", context)
 
-
 """ Personal """
+def listPer(request):
+    personas = personal.objects.all()
+
+    context = {
+        "personal": personas
+    }
+
+    return render(request, "pages/personal/list_per.html", context)
+
+def verPer(request, pk):
+    if pk != "":
+        per = personal.objects.get(rut = pk)
+
+        context = {
+            "persona": per,
+        }
+        return render(request, "pages/personal/ver_per.html", context)
+    
+def addPer(request):
+    if request.method == "POST":
+        pRut = request.POST["rut"]
+        pNombre = request.POST["nombre"]
+        pApellido = request.POST["apellido"]
+        pCargo = request.POST["cargo"]
+
+        cargoPer = cargoPersonal.objects.get(idCargo = pCargo)
+
+        perObj = personal(
+            rut = pRut,
+            nombre = pNombre,
+            apellido = pApellido,
+            cargo = cargoPer
+        )
+        perObj.save()
+
+        cargos = cargoPersonal.objects.all()
+
+        personas = personal.objects.all()
+
+        context = {
+            "personal": personas,
+            "cargos": cargos,
+        }
+        return render(request, "pages/personal/list_per.html", context)
+    
+    # Respuesta para el caso GET
+    cargos = cargoPersonal.objects.all()  # Obtener todos los cargos
+    return render(request, "pages/personal/add_per.html", {"cargos": cargos})
+
+def findPer(request, pk):
+    if pk != "":
+        per = personal.objects.get(rut = pk)
+        cargos = cargoPersonal.objects.all()
+
+        context = {
+            "persona": per,
+            "cargos": cargos
+        }
+        return render(request, "pages/personal/upd_per.html", context)
+
+def updPer(request):
+    if request.method == "POST":
+        pRut = request.POST["rut"]
+        pNombre = request.POST["nombre"]
+        pApellido = request.POST["apellido"]
+        pCargo = request.POST["cargo"]
+
+        cargoPer = cargoPersonal.objects.get(idCargo = pCargo)
+
+        perObj = personal(
+            rut = pRut,
+            nombre = pNombre,
+            apellido = pApellido,
+            cargo = cargoPer
+        )
+        perObj.save()
+
+        cargos = cargoPersonal.objects.all()
+
+        context = {
+            "persona": perObj,
+            "cargos": cargos,
+            "mensaje": "Modificación exitosa"
+        }
+        return render(request, "pages/personal/upd_per.html", context)
+
+def delPer(request, pk):
+    try:
+        per = personal.objects.get(rut = pk)
+        per.delete()
+
+        personas = personal.objects.all()
+
+        context = {
+            "persona": personas
+        }
+        return render(request, "pages/personal/list_per.html", context)
+    except:
+        per = personal.objects.get(rut = pk)
+
+        context = {
+            "persona": per,
+            "mensaje": "No se pudo eliminar al personal"
+        }
+        return render(request, "pages/personal/upd_per.html", context)
 
 """ Emergencias """
 

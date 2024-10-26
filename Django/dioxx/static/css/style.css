@@ -198,6 +198,7 @@ header nav {
         a {
             text-decoration: none;
             color: var(--azul);
+            transition: all 0.3s ease-in-out;
 
             &:hover {
                 color: var(--amarillo);
@@ -266,5 +267,46 @@ header nav {
             margin-top: 5vh;
         }
     }
-}   
+}  
+
+.main-per {
+    .info-top {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .img-per {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .table-per {
+            margin-top: 10vh;
+
+            tr .campo-info {
+                padding-left: 2.5vw;
+            }
+
+            tr .valor-campo {
+                padding-right: 5vh;
+            }
+        }
+    }
+
+    .opcion-per {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        .btn-per {
+            margin-left: 0;
+            margin-top: 10vh;
+        }
+
+        .btn-per-del {
+            margin-top: 2vh;
+        }
+
+    }
+}
     

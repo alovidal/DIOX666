@@ -14,6 +14,12 @@ urlpatterns = [
     path("delRes/<str:pk>", views.delRes, name="delRes"),
 
     # Personal
+    path("listPer/", views.listPer, name="listPer"),
+    path("verPer/<str:pk>", views.verPer, name="verPer"),
+    path("findPer/<str:pk>", views.findPer, name="findPer"),
+    path("addPer/", views.addPer, name="addPer"),
+    path("updPer/", views.updPer, name="updPer"),
+    path("delPer/<str:pk>", views.delPer, name="delPer"),
 
     # Emergencias
 
