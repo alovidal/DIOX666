@@ -55,5 +55,6 @@ urlpatterns = [
     path("findMed/<str:pk>", views.findMed, name="findMed"),
     path("updMed/<str:pk>", views.updMed, name="updMed"),
     path("delMed/<str:pk>", views.delMed, name="delMed"),
+    path("listResMedicamentos/", views.listResMedicamentos, name="listResMedicamentos"),
 
 ]

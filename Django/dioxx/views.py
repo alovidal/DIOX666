@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from .models import *
 
 # Create your views here.
@@ -35,9 +36,13 @@ def listRes(request):
 
 def verRes(request, pk):
     if pk != "":
-        res = residente.objects.get(rut = pk)
-        rec = receta.objects.get(residente = pk)
-        det = detalleReceta.objects.filter(idReceta = rec)
+        res = get_object_or_404(residente, rut=pk)
+        try:
+            rec = receta.objects.get(residente=pk)
+            det = detalleReceta.objects.filter(idReceta=rec)
+        except receta.DoesNotExist:
+            rec = None
+            det = []
 
         context = {
             "residente": res,
@@ -45,7 +50,6 @@ def verRes(request, pk):
             "detalleR": det
         }
         return render(request, "pages/residentes/ver_res.html", context)
-    
 
 def addRes(request):
     if request.method == "POST": 
@@ -98,9 +102,13 @@ def addRes(request):
     
 def findRes(request, pk):
     if pk != "":
-        res = residente.objects.get(rut = pk)
-        rec = receta.objects.get(residente = pk)
-        det = detalleReceta.objects.filter(idReceta = rec)
+        res = get_object_or_404(residente, rut=pk)
+        try:
+            rec = receta.objects.get(residente=pk)
+            det = detalleReceta.objects.filter(idReceta=rec)
+        except receta.DoesNotExist:
+            rec = None
+            det = []
 
         context = {
             "residente": res,
@@ -111,7 +119,6 @@ def findRes(request, pk):
 
 def updRes(request):
     if request.method == "POST": 
-
         rRut = request.POST["rut"]
         rNombre = request.POST["nombre"]
         rApellido = request.POST["apellido"]
@@ -119,43 +126,60 @@ def updRes(request):
         rContactos = request.POST["contactos"]
         rNroE = request.POST["nroEmergencia"]
 
-        resObj = residente(
-            rut = rRut,
-            nombre = rNombre,
-            apellido = rApellido,
-            edad = rEdad,
-            contactos = rContactos,
-            nroEmergencia = rNroE
-        )
-        resObj.save()
+        # Intentamos obtener el residente
+        res = get_object_or_404(residente, rut=rRut)
 
-        context = {
-            "residente": resObj,
-            "mensaje": "Modificación exitosa"
-        }
-        return render(request, "pages/residentes/upd_res.html", context)
+        # Actualizamos los campos del residente
+        res.nombre = rNombre
+        res.apellido = rApellido
+        res.edad = rEdad
+        res.contactos = rContactos
+        res.nroEmergencia = rNroE
+        res.save()
+
+        # Manejamos la actualización de la receta si existe
+        try:
+            rec = receta.objects.get(residente=res)
+            # Aquí podrías tener lógica para actualizar la receta si es necesario.
+        except receta.DoesNotExist:
+            rec = None
         
-def delRes(request, pk):
-    try:
-        res = residente.objects.get(rut = pk)
-        res.delete()
-
-        residentes = residente.objects.all()
-
-        context = {
-            "residentes": residentes
-        }
-        return render(request, "pages/residentes/list_res.html", context)
-    except:
-        res = residente.objects.get(rut = pk)
-        rec = receta.objects.get(residente = pk)
-        det = detalleReceta.objects.filter(idReceta = rec)
-
         context = {
             "residente": res,
             "receta": rec,
-            "detalleR": det,
-            "mensaje": "No se pudo eliminar al residente"
+            "mensaje": "Modificación exitosa"
+        }
+        return render(request, "pages/residentes/upd_res.html", context)
+       
+def delRes(request, pk):
+    try:
+        res = get_object_or_404(residente, rut=pk)
+        rec = receta.objects.get(residente=pk)
+        rec.delete()  # Elimina la receta asociada si existe
+        res.delete()  # Luego, elimina al residente
+
+        residentes = residente.objects.all()
+        context = {
+            "residentes": residentes,
+            "mensaje": "Residente eliminado con éxito."
+        }
+        return render(request, "pages/residentes/list_res.html", context)
+    except receta.DoesNotExist:
+        # Si la receta no existe, solo eliminamos al residente
+        res = get_object_or_404(residente, rut=pk)
+        res.delete()
+
+        residentes = residente.objects.all()
+        context = {
+            "residentes": residentes,
+            "mensaje": "Residente eliminado con éxito."
+        }
+        return render(request, "pages/residentes/list_res.html", context)
+    except Exception as e:
+        # Manejo de errores en caso de que haya un problema al eliminar
+        context = {
+            "residente": res,
+            "mensaje": "No se pudo eliminar al residente."
         }
         return render(request, "pages/residentes/upd_res.html", context)
 
@@ -746,3 +770,36 @@ def delMed(request, pk):
             "mensaje": "No se pudo eliminar el medicamento"
         }
         return render(request, "pages/medicamentos/upd_med.html", context)
+
+def listResMedicamentos(request):
+    residentes = residente.objects.all()
+    datos_residentes = []
+
+    for res in residentes:
+        try:
+            rec = receta.objects.get(residente=res)
+            detalles = detalleReceta.objects.filter(idReceta=rec)
+            medicamentos = []
+            for detalle in detalles:
+                medicamento_info = {
+                    'nombre': detalle.idMedicamento.nombre,
+                    'dosis_m': detalle.cantDosis if not detalle.horario.endswith('t') else 'No',
+                    'dosis_t': detalle.cantDosis if detalle.horario.endswith('t') else 'No',
+                    'dosis_n': detalle.cantDosis if detalle.horario.endswith('n') else 'No',
+                }
+                medicamentos.append(medicamento_info)
+
+            datos_residentes.append({
+                'residente': res,
+                'medicamentos': medicamentos
+            })
+        except receta.DoesNotExist:
+            datos_residentes.append({
+                'residente': res,
+                'medicamentos': []
+            })
+
+    context = {
+        'datos_residentes': datos_residentes
+    }
+    return render(request, "pages/medicamentos/list_res_medicamentos.html", context)
