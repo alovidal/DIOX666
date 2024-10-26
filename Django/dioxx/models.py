@@ -78,3 +78,13 @@ class notificacion(models.Model):
 
     def __str__(self):
         return str(self.idNotificacion)
+    
+class evento(models.Model):
+    idEvento = models.AutoField(primary_key=True, db_column="idEvento")
+    titulo = models.CharField(max_length=100)
+    fecha_inicio = models.DateTimeField()
+    fecha_fin = models.DateTimeField()
+    descripcion = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.titulo

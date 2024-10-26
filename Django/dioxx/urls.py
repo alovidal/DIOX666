@@ -38,6 +38,16 @@ urlpatterns = [
     path("updAcc/<str:pk>", views.updAcc, name="updAcc"),
     path("delAcc/<str:pk>", views.delAcc, name="delAcc"),
 
+    # Eventos
+    path("listEvt/", views.listEvt, name="listEvt"),
+    path("addEvt/", views.addEvt, name="addEvt"),
+    path("verEvt/<str:pk>", views.verEvt, name="verEvt"),
+    path("findEvt/<str:pk>", views.findEvt, name="findEvt"),
+    path("updEvt/<str:pk>", views.updEvt, name="updEvt"),
+    path("delEvt/<str:pk>", views.delEvt, name="delEvt"),
+    path('calendario/', views.calendario_eventos, name='calendario_eventos'),
+
     # Medicamentos
+    path("opcMed/", views.opcMed, name="opcMed"),
 
 ]

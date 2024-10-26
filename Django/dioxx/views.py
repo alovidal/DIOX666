@@ -518,4 +518,139 @@ def delAcc(request, pk):
         }
         return render(request, "pages/accesos/upd_acc.html", context)
 
+""" Eventos """
+def listEvt(request):
+    evts = evento.objects.all()
+
+    context = {
+        "eventos": evts 
+    }
+    return render(request, "pages/eventos/list_evt.html", context)
+
+def addEvt(request):
+    if request.method == "POST":
+        # Obtener datos del formulario
+        titulo = request.POST["titulo"]
+        fecha_inicio = request.POST["fecha_inicio"]
+        fecha_fin = request.POST["fecha_fin"]
+        descripcion = request.POST["descripcion"]
+
+        # Crear una nueva instancia de evento
+        nuevo_evento = evento(
+            titulo=titulo,
+            fecha_inicio=fecha_inicio,
+            fecha_fin=fecha_fin,
+            descripcion=descripcion
+        )
+        
+        # Guardar el nuevo evento en la base de datos
+        nuevo_evento.save()
+
+        # Obtener la lista actualizada de eventos
+        eventos = evento.objects.all()
+        context = {
+            "eventos": eventos,
+            "mensaje": "Evento agregado exitosamente"
+        }
+        return render(request, "pages/eventos/list_evt.html", context)
+    
+    # Si no es POST, mostrar el formulario vacío
+    return render(request, "pages/eventos/add_evt.html")
+
+def verEvt(request, pk):
+    if pk:
+        evento_obj = evento.objects.get(idEvento=pk)
+        
+        context = {
+            "evento": evento_obj
+        }
+        return render(request, "pages/eventos/ver_evt.html", context)
+
+def findEvt(request, pk):
+    if pk:
+        evento_obj = evento.objects.get(idEvento=pk)
+
+        context = {
+            "evento": evento_obj
+        }
+        return render(request, "pages/eventos/upd_evt.html", context)
+
+def updEvt(request, pk):
+    if pk: 
+        if request.method == "POST":
+            titulo = request.POST["titulo"]
+            fecha_inicio = request.POST["fecha_inicio"]
+            fecha_fin = request.POST["fecha_fin"]
+            descripcion = request.POST["descripcion"]
+
+            # Busca el evento por su id
+            try:
+                evento_obj = evento.objects.get(idEvento=pk)
+                evento_obj.titulo = titulo
+                evento_obj.fecha_inicio = fecha_inicio
+                evento_obj.fecha_fin = fecha_fin
+                evento_obj.descripcion = descripcion
+                evento_obj.save()
+
+                mensaje = "Modificación exitosa"
+            except evento.DoesNotExist:
+                evento_obj = None
+                mensaje = "Evento no encontrado"
+            
+            context = {
+                "evento": evento_obj,
+                "mensaje": mensaje
+            }
+            return render(request, "pages/eventos/upd_evt.html", context) 
+        else:
+            try:
+                evento_obj = evento.objects.get(idEvento=pk)
+                mensaje = ""
+            except evento.DoesNotExist:
+                evento_obj = None
+                mensaje = "Evento no encontrado"
+            
+            context = {
+                "evento": evento_obj,
+                "mensaje": mensaje
+            }
+            return render(request, "pages/eventos/upd_evt.html", context) 
+    
+    else:
+        mensaje = "ID de evento no válido"
+        context = {
+            "evento": None,
+            "mensaje": mensaje
+        }
+        return render(request, "pages/eventos/upd_evento.html", context)
+
+def delEvt(request, pk):
+    try:
+        # Intenta obtener el objeto Evento y eliminarlo
+        evento_obj = evento.objects.get(idEvento=pk)
+        evento_obj.delete()
+
+        # Obtiene todos los eventos restantes
+        eventos = evento.objects.all()
+
+        # Renderiza la lista de eventos actualizada
+        context = {
+            "eventos": eventos
+        }
+        return render(request, "pages/eventos/list_evt.html", context)
+
+    except evento.DoesNotExist:
+        # En caso de error, prepara el contexto con un mensaje de error
+        context = {
+            "mensaje": "No se pudo eliminar el evento"
+        }
+        return render(request, "pages/eventos/upd_evt.html", context)
+
+def calendario_eventos(request):
+    eventos = evento.objects.all()
+    return render(request, 'pages/eventos/calendario_eventos.html', {'eventos': eventos})
+
 """ Medicamentos """
+def opcMed(request):
+    context = {}
+    return render(request, "pages/medicamentos/opc_med.html", context)
