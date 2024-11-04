@@ -1,37 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
-    
-    <link rel="stylesheet" href="{% static './css/style.css' %}">
-    <title>DIOXX_666</title>
-    <style>
-        .error {
-            color: red; /* Color para el mensaje de error */
-            font-weight: bold;
-            margin-bottom: 20px; /* Espacio inferior para separar del formulario */
-        }
-    </style>
-</head>
-<body>
-    <main class="main-login">
-        <h1 class="titulo font-texto">DIOXX_666</h1>
-        <section class="form-login">
-            {% if mensaje %}
-                <div class="error">
-                    {{ mensaje }}
-                </div>
-            {% endif %}
-            <form method="POST" action="{% url 'login' %}" >
-                {% csrf_token %}
-                <input class="form-input" type="text" name="username" placeholder="Ingrese su usuario"  style="margin-bottom: 2vh;" required>
-                <input class="form-input" type="password" name="password" placeholder="Ingrese su contraseña" required>
-                <button type="submit" class="btn-global btn-login inp-global">Ingresar</button>
-            </form>
-        </section>
+    <link rel="stylesheet" href="{% static './css/login.css' %}" />
+    <title>DIOXX_666 - Login</title>
+
+  </head>
+  <body>
+    <main class="login-main">
+      <h1 class="login-title">DIOXX_666</h1>
+      <section class="login-section">
+        <form method="POST" action="{% url 'login' %}" class="login-form">
+          {% csrf_token %}
+          <input type="text" name="username" placeholder="Ingrese su usuario" required class="login-input" />
+          <input type="password" name="password" placeholder="Ingrese su contraseña" required class="login-input" />
+          <button class="login-button">Ingresar</button>
+        </form>
+        {% if mensaje %}
+        <div class="login-message">{{ mensaje }}</div>
+        {% endif %}
+      </section>
     </main>
-</body>
+  </body>
 </html>

@@ -6,60 +6,59 @@
 
     {% load static %}
 
-    <link rel="stylesheet" href="{% static './css/style.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-    />
+    <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <title>DIOXX_666</title>
   </head>
   <body>
     {% include "base/header.html" %}
 
-    <main class="main-list main-listPer">
-      <h1 class="font-texto titulo-per titulo-list">Listado de personal</h1>
+    <main class="main-content">
+      <h1 class="main-title">Listado de personal</h1>
+      <section class="search-section">
+        <div class="search-container">
+          <input
+            type="search"
+            name="busc-per"
+            placeholder="Ingrese el rut o apellido del personal"
+            class="search-input"
+          />
+        </div>
+      </section>
+      <section class="table-section">
+        <div class="table-container">
+          <table class="residents-table">
+            <thead>
+              <tr>
+                <th>Rut</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cargo</th>
+                <th>Ver información</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for persona in personal %}
+              <tr>
+                <td>{{ persona.rut }}</td>
+                <td>{{ persona.nombre }}</td>
+                <td>{{ persona.apellido }}</td>
+                <td>{{ persona.cargo.descripcion }}</td>
+                <td><a href="{% url 'verPer' pk=persona.rut %}">Ver</a></td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5">No hay personal registrado.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <div class="buscador-list buscador-per">
-        <input
-          type="search"
-          name="busc-per"
-          id="busc-per"
-          placeholder="Ingrese el rut o apellido del personal"
-        />
-      </div>
-      <div class="table-list table-per">
-        <table class="font-texto">
-          <thead>
-            <tr>
-              <th>Rut</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Cargo</th>
-              <th>Ver información</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for persona in personal %}
-            <tr>
-              <td>{{ persona.rut }}</td>
-              <td>{{ persona.nombre }}</td>
-              <td>{{ persona.apellido }}</td>
-              <td>{{ persona.cargo.descripcion }}</td>
-              <td><a href="{% url 'verPer' pk=persona.rut %}">Ver</a></td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="5">No hay personal registrado.</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      <div class="opcion-list opcion-res">
-        <a class="a-btn-global" href="{% url 'addPer' %}"
-          ><button class="btn-global btn-per btn-add"  style="margin-top: 1vh;">Agregar</button></a
-        >
+      <div class="add-button-container">
+        <a href="{% url 'addPer' %}"
+          ><button class="add-button">Agregar</button>
+        </a>
       </div>
     </main>
   </body>
