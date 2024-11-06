@@ -22,7 +22,9 @@ class receta(models.Model):
 class medicamento(models.Model):
     idMedicamento = models.AutoField(primary_key=True, db_column="idMedicamento")
     nombre = models.CharField(max_length=80)
-    
+    tipoDosis = models.CharField(max_length=80)
+    descripcion = models.CharField(max_length=200)
+
     def __str__(self):
         return self.nombre
 
