@@ -1,124 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     {% load static %}
-
-    <link rel="stylesheet" href="{% static './css/style.css' %}" />
-    <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-    />
+    <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
+    <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <title>DIOXX_666</title>
-</head>
-<body>
+  </head>
+  <body>
     {% include "base/header.html" %}
 
-    <main class="main-res main-addRes main-updRes">
-        <h3 class="font-texto volver-add">
-            <a href="{% url 'verRes' pk=residente.rut %}">Volver</a>
-        </h3>
+    <main class="main-content">
+      <h3 id="volver">
+        <a href="{% url 'verRes' pk=residente.rut %}">Volver</a>
+      </h3>
 
-        {% if mensaje %}
-            <div class="mensaje font-texto" style="text-align: center;">
-                <p>{{ mensaje }}</p>
-            </div>
-        {% endif %}
+      {% if mensaje %}
+      <div>
+        <p>{{ mensaje }}</p>
+      </div>
+      {% endif %}
 
+      <section class="resident-section">
         <form method="POST" action="{% url 'updRes' %}">
-            {% csrf_token %}
-            <div class="info-top table-res-inf">
-                <div class="img-res">
-                    <h1 class="font-texto" style="color: white; text-align: center">
-                        Residente
-                    </h1>
-                </div>
-                <div class="info-add info-res">
-                    <table class="table-add font-texto">
-                        <tr>
-                            <td class="campo-info">Rut:</td>
-                            <td class="valor-campo">
-                                <input type="text" name="rut" value="{{ residente.rut }}" readonly style="border: 0;"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="campo-info">Nombre:</td>
-                            <td class="valor-campo">
-                                <input type="text" name="nombre" value="{{ residente.nombre }}" style="border: 0"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="campo-info">Apellido:</td>
-                            <td class="valor-campo">
-                                <input type="text" name="apellido" value="{{ residente.apellido }}" style="border: 0"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="campo-info">Edad:</td>
-                            <td class="valor-campo">
-                                <input type="number" name="edad" value="{{ residente.edad }}" style="border: 0"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="campo-info">Contactos:</td>
-                            <td class="valor-campo">
-                                <input type="text" name="contactos" value="{{ residente.contactos }}" style="border: 0"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="campo-info">Número de emergencia:</td>
-                            <td class="valor-campo">
-                                <input type="text" name="nroEmergencia" value="{{ residente.nroEmergencia }}" style="border: 0"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="campo-info">Exámenes:</td>
-                            <td class="valor-campo"><button>Subir</button></td>
-                        </tr>
-                    </table>
-                </div>
+          {% csrf_token %}
+          <div>
+            <div>
+              <h1 class="section-title">Información del Residente</h1>
             </div>
 
-            <div class="info-bottom table-res-med">
-                <h3 class="titulo-res-med font-texto">Recetas médicas</h3>
-
-                <table class="table-res-med font-texto">
-                    <thead>
-                        <tr>
-                            <th>Medicamento</th>
-                            <th>Cantidad por dosis</th>
-                            <th>Horario</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for detalle in detalleR %}
-                        <tr>
-                            <td>{{ detalle.idMedicamento.nombre }}</td>
-                            <td>{{ detalle.cantDosis }}</td>
-                            <td>{{ detalle.horario }}</td>
-                        </tr>
-                        {% endfor %}
-                        <tr>
-                          <td colspan="3" style="text-align: center">
-                            <input type="button" class="inp-global" value="Agregar">
-                          </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="resident-form-container">
+              <table class="resident-table">
+                <tr>
+                  <td class="label">Rut:</td>
+                  <td>
+                    <input
+                      type="text"
+                      name="rut"
+                      value="{{ residente.rut }}"
+                      readonly
+                      class="input-field"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Nombre:</td>
+                  <td>
+                    <input
+                      type="text"
+                      name="nombre"
+                      value="{{ residente.nombre }}"
+                      class="input-field"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Apellido:</td>
+                  <td>
+                    <input
+                      type="text"
+                      name="apellido"
+                      value="{{ residente.apellido }}"
+                      class="input-field"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Edad:</td>
+                  <td>
+                    <input
+                      type="number"
+                      name="edad"
+                      value="{{ residente.edad }}"
+                      class="input-field"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Contactos:</td>
+                  <td>
+                    <input
+                      type="text"
+                      name="contactos"
+                      value="{{ residente.contactos }}"
+                      class="input-field"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Número de emergencia:</td>
+                  <td>
+                    <input
+                      type="text"
+                      name="nroEmergencia"
+                      value="{{ residente.nroEmergencia }}"
+                      class="input-field"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Exámenes:</td>
+                  <td><button class="upload-button">Subir</button></td>
+                </tr>
+              </table>
             </div>
+          </div>
 
-            <div class="opcion-add">
-                <input type="submit" class="inp-global btn-add btn-res" value="Actualizar">
+          <div class="table-section">
+            <h3 class="section-subtitle">Recetas médicas</h3>
+            <div class="table-container">
+              <table class="residents-table">
+                <thead>
+                  <tr>
+                    <th>Medicamento</th>
+                    <th>Cantidad por dosis</th>
+                    <th>Horario</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for detalle in detalleR %}
+                  <tr>
+                    <td>{{ detalle.idMedicamento.nombre }}</td>
+                    <td>{{ detalle.cantDosis }}</td>
+                    <td>{{ detalle.horario }}</td>
+                  </tr>
+                  {% endfor %}
+
+                </tbody>
+              </table>
             </div>
+          </div>
+
+          <div class="add-button-container">
+            <input type="submit" value="Actualizar" class="add-button" />
+          </div>
         </form>
         <form method="POST" action="{% url 'delRes' pk=residente.rut %}">
           {% csrf_token %}
-          <div class="opcion-add">
-              <input type="submit" class="inp-global btn-del btn-res" value="Eliminar">
+          <div class="add-button-container">
+            <input type="button" value="Agregar" class="add-button"/>
           </div>
-      </form>
+          <div class="add-button-container">
+            <input type="submit" value="Eliminar" class="add-button" />
+          </div>
+        </form>
+      </section>
     </main>
-</body>
+  </body>
 </html>
