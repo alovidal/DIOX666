@@ -15,75 +15,76 @@
         <a href="{% url 'listRes' %}">Volver</a>
       </h3>
 
-      <section>
+      <section class="resident-section">
         <div>
-          <h1>Residente</h1>
-          <div>
-            <table>
+          <h1 class="section-title">Residente</h1>
+          <div class="resident-form-container">
+            <table class="resident-table">
               <tr>
-                <td>Rut:</td>
+                <td class="label">Rut:</td>
                 <td>{{ residente.rut }}</td>
               </tr>
               <tr>
-                <td>Nombre:</td>
+                <td class="label">Nombre:</td>
                 <td>{{ residente.nombre }}</td>
               </tr>
               <tr>
-                <td>Apellido:</td>
+                <td class="label">Apellido:</td>
                 <td>{{ residente.apellido }}</td>
               </tr>
               <tr>
-                <td>Edad:</td>
+                <td class="label">Edad:</td>
                 <td>{{ residente.edad }} años</td>
               </tr>
               <tr>
-                <td>Contactos:</td>
+                <td class="label">Contactos:</td>
                 <td>{{ residente.contactos }}</td>
               </tr>
               <tr>
-                <td>Número de emergencia:</td>
+                <td class="label">Número de emergencia:</td>
                 <td>{{ residente.nroEmergencia }}</td>
               </tr>
               <tr>
-                <td>Exámenes:</td>
-                <td><button>Subir</button></td>
+                <td class="label">Exámenes:</td>
+                <td><button class="upload-button">Subir</button></td>
               </tr>
             </table>
           </div>
         </div>
       </section>
 
-      <div>
-        <h3 class="titulo-res-med font-texto">Recetas médicas</h3>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Medicamento</th>
-              <th>Cantidad por dosis</th>
-              <th>Horario</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for detalle in detalleR %}
-            <tr>
-              <td>{{ detalle.idMedicamento.nombre }}</td>
-              <td>{{ detalle.cantDosis }}</td>
-              <td>{{ detalle.horario }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="3">
-                No hay recetas registradas para este residente.
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="table-section">
+        <h3 class="section-subtitle">Recetas médicas</h3>
+        <div class="table-container">
+          <table class="residents-table">
+            <thead>
+              <tr>
+                <th>Medicamento</th>
+                <th>Cantidad por dosis</th>
+                <th>Horario</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for detalle in detalleR %}
+              <tr>
+                <td>{{ detalle.idMedicamento.nombre }}</td>
+                <td>{{ detalle.cantDosis }}</td>
+                <td>{{ detalle.horario }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3">
+                  No hay recetas registradas para este residente.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div>
+      <div class="add-button-container">
         <a href="{% url 'findRes' pk=residente.rut %}">
-          <button>Actualizar</button>
+          <button class="add-button">Actualizar</button>
         </a>
       </div>
     </main>
