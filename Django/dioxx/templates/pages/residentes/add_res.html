@@ -3,12 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     {% load static %}
+    
     <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
+    <script src="{% static '/js/valResidente.js' %}"></script>
     <title>DIOXX_666 - Registro de Residente</title>
   </head>
   <body>
+
     {% include "base/header.html" %}
 
     <main class="main-content">
@@ -26,25 +30,25 @@
               <tr>
                 <td class="label">RUT:</td>
                 <td>
-                  <input type="text" name="rut" placeholder="Ingrese el RUT" class="input-field" />
+                  <input id="rut" type="text" name="rut" placeholder="Ingrese el RUT" class="input-field" />
                 </td>
               </tr>
               <tr>
                 <td class="label">Nombre:</td>
                 <td>
-                  <input type="text" name="nombre" placeholder="Ingrese el nombre" class="input-field" />
+                  <input id="nombre" type="text" name="nombre" placeholder="Ingrese el nombre" class="input-field" />
                 </td>
               </tr>
               <tr>
                 <td class="label">Apellido:</td>
                 <td>
-                  <input type="text" name="apellido" placeholder="Ingrese el apellido" class="input-field" />
+                  <input id="apellido" type="text" name="apellido" placeholder="Ingrese el apellido" class="input-field" />
                 </td>
               </tr>
               <tr>
                 <td class="label">Edad:</td>
                 <td>
-                  <input type="number" name="edad" placeholder="Ingrese la edad" class="input-field" />
+                  <input id="edad" type="number" name="edad" placeholder="Ingrese la edad" class="input-field" />
                 </td>
               </tr>
               <tr>
@@ -97,10 +101,12 @@
           </div>
 
           <div class="add-button-container">
-            <input type="submit" value="Agregar" class="add-button"/>
+            <input onclick="validarAddResidente()" type="submit" value="Agregar" class="add-button"/>
           </div>
         </form>
       </section>
     </main>
+    <script src="{% static '/js/validacionResidente.js' %}"></script>
   </body>
 </html>
+    
