@@ -108,6 +108,8 @@ body {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  height: min-content;
+  gap: 5px;
 }
 
 .add-button {

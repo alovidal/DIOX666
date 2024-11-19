@@ -10,8 +10,4 @@ function validarAddPersonal() {
     const cargo = selectCargo.value;
 
     console.log(cargo)
-
-    if (rut === "" || nombre === "" || cargo === "" ) {
-        console.log("Rut vacio")
-    }
 }

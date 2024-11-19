@@ -23,7 +23,9 @@ body {
   /* Tabla de agregar */
   .resident-form-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
   }
   
   .resident-table {
