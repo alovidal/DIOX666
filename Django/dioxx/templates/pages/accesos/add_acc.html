@@ -1,63 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
-    <link rel="stylesheet" href="{% static './css/styleAdd.css' %}"/>
-    <link rel="stylesheet" href="{% static './css/styleList.css' %}"/>
+    <link rel="stylesheet" href="{% static './css/styleAccesos.css' %}" />
+    <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
+    <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <title>DIOXX_666</title>
-
-</head>
-<body>
+  </head>
+  <body>
     {% include "base/header.html" %}
 
     <main class="main-content">
-        <h3 id="volver">
-            <a href="{% url 'listAcc' %}">Volver</a>
-        </h3>
+      <h3 id="volver">
+        <a href="{% url 'listAcc' %}">Volver</a>
+      </h3>
 
-        <div class="resident-section"> 
-            <h1 class="section-title">  
-                Agregar Acceso
-            </h1>
-            <div class="resident-form-container">
-                <form method="POST" action="{% url 'addAcc' %}">
-                    {% csrf_token %}
-                    <table class="resident-table">
-                        <tr>
-                            <td class="label">Fecha:</td>
-                            <td><input type="date" name="fecha" class="input-field" required /></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Tipo:</td>
-                            <td>
-                                <select name="tipo" required>
-                                    <option value="" selected>Seleccionar Tipo</option>
-                                    <option value="entrada">Entrada</option>
-                                    <option value="salida">Salida</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label">Rut:</td>
-                            <td><input type="text" name="personaRut" class="input-field" required /></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Nombre:</td>
-                            <td><input type="text" name="personaNombre" class="input-field" required /></td>
-                        </tr>
-                    </table>
-                    <div class="add-button-container">
-                        <input
-                            type="submit"
-                            value="Agregar Acceso"
-                            class="add-button"
-                        />
-                    </div>
-                </form>
+      <div class="acceso-section">
+        <h1 class="section-title">Agregar Acceso</h1>
+        <div class="acceso-form-container">
+          <form method="POST" action="{% url 'addAcc' %}">
+            {% csrf_token %}
+            <table class="acceso-table">
+              <tr style="padding-bottom: 2em;">
+                <td class="label">Fecha:</td>
+                <td>
+                  <input
+                    id="fecha"
+                    type="date"
+                    name="fecha"
+                    class="input-field input-acceso"
+                    required
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="label">Tipo:</td>
+                <td>
+                  <select
+                    id="tipo"
+                    name="tipo"
+                    class="input-field input-acceso"
+                    required
+                  >
+                    <option value="" selected>Seleccionar Tipo</option>
+                    <option value="entrada">Entrada</option>
+                    <option value="salida">Salida</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="label">Rut:</td>
+                <td>
+                  <input
+                    id="rut"
+                    type="text"
+                    name="personaRut"
+                    class="input-field input-acceso"
+                    required
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="label">Nombre:</td>
+                <td>
+                  <input
+                    id="nombre"
+                    type="text"
+                    name="personaNombre"
+                    class="input-field input-acceso"
+                    required
+                  />
+                </td>
+              </tr>
+            </table>
+            <div
+              id="mensaje-error"
+              style="display: none; color: red; margin-bottom: 5vh; width: 20vw; height: 5vh;"
+            ></div>
+            <div class="add-button-container">
+              <input type="submit" value="Agregar Acceso" class="add-button" />
             </div>
+          </form>
         </div>
+      </div>
     </main>
-</body>
+    <script src="{% static 'js/valAcessos.js' %}"></script>
+  </body>
 </html>

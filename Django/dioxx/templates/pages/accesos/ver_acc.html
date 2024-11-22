@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
+    <link rel="stylesheet" href="{% static './css/styleAccesos.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <title>DIOXX_666</title>
@@ -17,12 +18,12 @@
             <a href="{% url 'listAcc' %}">Volver</a>
         </h3>
 
-        <div class="resident-section">
+        <div class="acceso-section">
             <h1 class="section-title">
                 Detalle de Acceso
             </h1>
-            <div class="resident-form-container">
-                <table class="resident-table">
+            <div class="acceso-form-container">
+                <table class="acceso-table">
                     <tr>
                         <td class="label">Fecha:</td>
                         <td>{{ acceso.fecha|date:"d-m-Y" }}</td>

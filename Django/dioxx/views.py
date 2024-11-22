@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from .models import *
-
+from datetime import datetime, timedelta
+from django.utils.timezone import localtime, now, make_aware
 # Create your views here.
 
 """ 
@@ -24,10 +25,23 @@ def index(request):
     return render(request, "pages/index.html", context)
 
 def notificaciones(request):
-    noti = notificacion.objects.all()
+    # Obtener la fecha y hora local actual
+    today = localtime(now()).date()
+    # Calcular la fecha de mañana
+    tomorrow = today + timedelta(days=1)
+
+    # Filtrar eventos que ocurren mañana
+    eventos = evento.objects.filter(
+        fecha_inicio__date=tomorrow
+    )
+
+    # Depuración: Imprimir las fechas de los eventos
+    for evt in eventos:
+        print(f"Evento: {evt.descripcion}, Fecha inicio: {evt.fecha_inicio}")
 
     context = {
-        "notificaciones": noti 
+        'eventos': eventos,
+        'tomorrow': tomorrow,
     }
     return render(request, "pages/notificaciones.html", context)
 

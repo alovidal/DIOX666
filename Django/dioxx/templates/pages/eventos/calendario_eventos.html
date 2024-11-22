@@ -34,13 +34,13 @@
             padding: 20px; /* Espaciado alrededor */
         }
         #calendar {
-            width: 100%; /* Ancho completo del calendario */
-            max-width: 800px; /* Ancho máximo */
-            background-color: white; /* Fondo blanco para el calendario */
+            width: 60%; 
+            height: 60%;
+            background-color: white; 
             border: 1px solid var(--azul);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden; /* Para que el contenido no sobresalga */
+            overflow: hidden; 
         }
         h1 {
             text-align: center;
@@ -48,13 +48,10 @@
             margin-bottom: 20px;
         }
         .volver-add {
-            margin-bottom: 20px; /* Espacio entre el botón y el calendario */
-        }
-        .a-btn-global {
-            text-decoration: none;
+            margin-bottom: 20px; 
         }
         .btn-global {
-            border-radius: 0.3em; /* Bordes redondeados */
+            border-radius: 0.3em; 
             width: 10vw; /* Ancho del botón */
             height: 4vh; /* Alto del botón */
             font-size: 1.2em; /* Tamaño de fuente */
@@ -63,11 +60,32 @@
             color: var(--azul); /* Color del texto */
             transition: all 0.3s ease-in-out; /* Transición para el hover */
             display: inline-block; /* Para que se ajuste al contenido */
-            text-align: center; /* Centrar texto */
+            text-align: center; 
         }
         .btn-global:hover {
-            color: white; /* Color del texto al hacer hover */
+            color: yellow; /* Color del texto al hacer hover */
             cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+        }
+        /* Estiliza los botones del calendario */
+        .fc-button {
+            color: black; /* Color del texto */
+            border: none; /* Elimina bordes */
+            border-radius: 0.3em; /* Bordes redondeados */
+            font-size: 1em; /* Tamaño de fuente */
+            font-weight: bold; /* Negrita */
+            cursor: pointer; /* Muestra el cursor de mano */
+        }
+
+        /* Agrupación de botones (opcional para ajustar márgenes o espaciado) */
+        .fc-button-group {
+            display: flex; /* Asegura alineación horizontal */
+            gap: 5px; /* Espaciado entre botones */
+        }
+        /* Estilo para eventos pasados */
+        .evento-pasado {
+            background-color: red !important; /* Color de fondo rojo */
+            color: white !important; /* Color de texto blanco */
+            border-color: red !important; /* Borde rojo */
         }
     </style>
 
@@ -97,12 +115,12 @@
                     events: [
                         {% for evento in eventos %}
                         {
-                            title: '{{ evento.titulo }}',
-                            start: '{{ evento.fecha_inicio }}',
+                            title: "{{ evento.titulo|escapejs }}", 
+                            start: "{{ evento.fecha_inicio|date:'c' }}",
                             {% if evento.fecha_fin %}
-                            end: '{{ evento.fecha_fin }}',
+                            end: "{{ evento.fecha_fin|date:'c' }}",
                             {% endif %}
-                            allDay: true // Asegura que el evento se trate como de todo el día
+                            allDay: true 
                         },
                         {% endfor %}
                     ],

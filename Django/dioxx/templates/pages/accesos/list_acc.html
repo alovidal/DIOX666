@@ -21,6 +21,7 @@
                 <th>Fecha</th>
                 <th>Rut</th>
                 <th>Nombre</th>
+                <th>Tipo</th>
                 <th>Ver información</th>
               </tr>
             </thead>
@@ -31,6 +32,7 @@
                 <td>{{ acceso.fecha }}</td>
                 <td>{{ acceso.personaRut }}</td>
                 <td>{{ acceso.personaNombre }}</td>
+                <td>{{ acceso.tipo }}</td>
                 <td><a href="{% url 'verAcc' pk=acceso.idAcceso %}">Ver</a></td>
               </tr>
               {% empty %}

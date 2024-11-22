@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
+    <link rel="stylesheet" href="{% static './css/styleEventos.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
     <title>DIOXX_666</title>
@@ -17,12 +18,12 @@
             <a href="{% url 'listEvt' %}">Volver</a>
         </h3>
 
-        <div class="resident-section">
+        <div class="evento-section">
             <h1 class="section-title">
                 Detalle del Evento
             </h1>
-            <div class="resident-form-container">
-                <table class="resident-table">
+            <div class="evento-form-container">
+                <table class="evento-table">
                     <tr>
                         <td class="label">Título:</td>
                         <td>{{ evento.titulo }}</td>
