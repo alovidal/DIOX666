@@ -41,6 +41,12 @@ body {
   color: #333;
 }
 
+.section-subtitle {
+  font-size: 18px;
+  color: #333;
+  margin: 20px 0 10px;
+}
+
 /*Sección de búsqueda*/
 .search-section {
   display: flex;
@@ -110,6 +116,10 @@ body {
   margin-top: 20px;
   height: min-content;
   gap: 5px;
+}
+
+.add-button-container a {
+  text-decoration: none;
 }
 
 .add-button {

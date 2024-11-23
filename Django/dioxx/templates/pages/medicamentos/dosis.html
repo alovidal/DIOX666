@@ -4,28 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
-    <link rel="stylesheet" href="{% static './css/style.css' %}" />
-    <link rel="stylesheet" href="{% static './css/styleDosis.css' %}" />
+    <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <title>DIOXX_666</title>
 
   </head>
   <body>
     {% include "base/header.html" %}
 
-    <main class="main-list main-listAcc">
-      <h1 class="font-texto titulo-acc titulo-list">Medicamentos del Residente</h1>
+    <main class="main-content">
+      <h1 class="main-title">Medicamentos del Residente</h1>
 
       <!-- Botones para seleccionar el bloque horario -->
-      <div class="botones-bloque">
-        <button class="btn-global" onclick="showBlock('mañana')">Mañana</button>
-        <button class="btn-global" onclick="showBlock('tarde')">Tarde</button>
-        <button class="btn-global" onclick="showBlock('noche')">Noche</button>
+      <div class="add-button-container">
+        <button class="add-button" onclick="showBlock('mañana')">Mañana</button>
+        <button class="add-button" onclick="showBlock('tarde')">Tarde</button>
+        <button class="add-button" onclick="showBlock('noche')">Noche</button>
       </div>
 
-      <h2 class="subtitulo font-texto">Residente: {{ residente_actual.nombre }} {{ residente_actual.apellido }}</h2>
-     
-      <div class="table-list table-acc">
-        <table class="font-texto" style="border-collapse: collapse; width: 80%; margin: 0 auto;">
+      <h2 class="section-subtitle">Residente: {{ residente_actual.nombre }} {{ residente_actual.apellido }}</h2>
+     <section class="table-section">
+      <div class="table-container">
+        <table class="residents-table">
           <thead>
             <tr>
               <th>Medicamento</th>
@@ -48,7 +47,7 @@
             </tr>
             {% empty %}
             <tr>
-              <td colspan="4" style="text-align: center;">No hay medicamentos registrados.</td>
+              <td colspan="4">No hay medicamentos registrados.</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -56,14 +55,15 @@
       </div>
 
       <!-- Navegación entre residentes -->
-      <div class="div-a-residente">
+      <div class="add-button-container">
         {% if residente_index > 0 %}
-        <a href="?residente_index={{ residente_index|add:"-1" }}">Anterior Residente</a>
+        <a class="add-button" href="?residente_index={{ residente_index|add:"-1" }}">Anterior Residente</a>
         {% endif %}
         {% if residente_index < total_residentes|add:"-1" %}
-        <a href="?residente_index={{ residente_index|add:"1" }}">Siguiente Residente</a>
+        <a class="add-button" href="?residente_index={{ residente_index|add:"1" }}">Siguiente Residente</a>
         {% endif %}
       </div>
+      </section>
     </main>
 
     <script>
