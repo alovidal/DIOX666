@@ -8,36 +8,22 @@
     <link rel="stylesheet" href="{% static './css/styleDosis.css' %}" />
     <title>DIOXX_666</title>
 
-    <style>
-      .a-btn-global {
-        color: var(--color-por-defecto); /* Ajusta el color según sea necesario */
-        text-decoration: none;
-      }
-
-      .btn-global {
-        border-radius: 0.3em;
-        width: 10vw;
-        height: 4vh;
-        font-size: 1.2em;
-        font-weight: 600;
-        background-color: var(--amarillo);
-        color: var(--azul);
-        transition: all 0.3s ease-in-out;
-      }
-
-      .btn-global:hover {
-        color: white;
-        cursor: pointer;
-      }
-    </style>
   </head>
   <body>
     {% include "base/header.html" %}
 
     <main class="main-list main-listAcc">
       <h1 class="font-texto titulo-acc titulo-list">Medicamentos del Residente</h1>
+
+      <!-- Botones para seleccionar el bloque horario -->
+      <div class="botones-bloque">
+        <button class="btn-global" onclick="showBlock('mañana')">Mañana</button>
+        <button class="btn-global" onclick="showBlock('tarde')">Tarde</button>
+        <button class="btn-global" onclick="showBlock('noche')">Noche</button>
+      </div>
+
       <h2 class="subtitulo font-texto">Residente: {{ residente_actual.nombre }} {{ residente_actual.apellido }}</h2>
-    
+     
       <div class="table-list table-acc">
         <table class="font-texto" style="border-collapse: collapse; width: 80%; margin: 0 auto;">
           <thead>
@@ -48,23 +34,27 @@
               <th>Horario</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="bloque-content">
             {% for medicamento in medicamentos %}
             <tr>
               <td>{{ medicamento.nombre }}</td>
               <td>{{ medicamento.tipoDosis }}</td>
               <td>{{ medicamento.cantDosis }}</td>
-              <td>{{ medicamento.horario }}</td>
+              <td>
+                {% for hora in medicamento.bloques.mañana %}
+                {{ hora }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="5" style="border: 1px solid black; padding: 8px; text-align: center;">No hay medicamentos registrados.</td>
+              <td colspan="4" style="text-align: center;">No hay medicamentos registrados.</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
-    
+
       <!-- Navegación entre residentes -->
       <div class="div-a-residente">
         {% if residente_index > 0 %}
@@ -75,5 +65,51 @@
         {% endif %}
       </div>
     </main>
+
+    <script>
+      const medicamentos = {{ medicamentos|safe }}; // Pasar medicamentos al JS
+    
+      function showBlock(bloque) {
+        // Guardar el bloque seleccionado en localStorage
+        localStorage.setItem('selectedBlock', bloque);
+    
+        // Actualizar contenido de la tabla
+        const tbody = document.getElementById('bloque-content');
+        tbody.innerHTML = '';
+    
+        medicamentos.forEach(med => {
+          const horas = med.bloques[bloque];
+          if (horas.length > 0) {
+            const row = `<tr>
+                <td>${med.nombre}</td>
+                <td>${med.tipoDosis}</td>
+                <td>${med.cantDosis}</td>
+                <td>${horas.join(', ')}</td>
+              </tr>`;
+            tbody.innerHTML += row;
+          }
+        });
+    
+        // Restaurar todos los botones al color azul
+        const buttons = document.querySelectorAll('.btn-global');
+        buttons.forEach(button => {
+          button.style.backgroundColor = "#007bff"; // Azul predeterminado
+        });
+
+        // Cambiar el color del botón activo
+        const activeButton = document.querySelector(`.btn-global[onclick="showBlock('${bloque}')"]`);
+        if (activeButton) {
+          activeButton.style.backgroundColor = "#28a745"; // Verde para el botón activo
+        }
+      }
+    
+      // Inicializar al cargar la página
+      // Inicializar al cargar la página
+      document.addEventListener('DOMContentLoaded', () => {
+        const selectedBlock = localStorage.getItem('selectedBlock') || 'mañana';
+        showBlock(selectedBlock);
+      });
+
+    </script>
   </body>
 </html>

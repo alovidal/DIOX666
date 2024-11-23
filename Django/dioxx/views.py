@@ -1010,16 +1010,31 @@ def dosis(request):
     # Obtener medicamentos del residente actual a través de sus recetas
     recetas = receta.objects.filter(residente=residente_actual)
     detalles = detalleReceta.objects.filter(idReceta__in=recetas)
-    medicamentos = [
-        {
+    medicamentos = []
+
+    for detalle in detalles:
+        horario = int(detalle.horario)  # Convertir horario a entero (cada cuántas horas)
+        horas = []
+        current_time = 6  # Inicia a las 6:00 AM
+
+        while current_time < 24:
+            horas.append(f"{current_time:02}:00")  # Formatear la hora
+            current_time += horario
+
+        # Categorizar las horas en bloques (mañana, tarde, noche)
+        bloques = {
+            "mañana": [h for h in horas if 6 <= int(h.split(":")[0]) < 12],
+            "tarde": [h for h in horas if 12 <= int(h.split(":")[0]) < 18],
+            "noche": [h for h in horas if 18 <= int(h.split(":")[0]) < 24],
+        }
+
+        medicamentos.append({
             "nombre": detalle.idMedicamento.nombre,
             "tipoDosis": detalle.idMedicamento.tipoDosis,
             "descripcion": detalle.idMedicamento.descripcion,
             "cantDosis": detalle.cantDosis,
-            "horario": detalle.horario,
-        }
-        for detalle in detalles
-    ]
+            "bloques": bloques,
+        })
 
     # Contexto para renderizar la página
     context = {
@@ -1030,3 +1045,4 @@ def dosis(request):
     }
 
     return render(request, "pages/medicamentos/dosis.html", context)
+
