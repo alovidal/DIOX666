@@ -22,6 +22,9 @@
       display: block;
       text-align: center;
     }
+    .hide {
+      display: none;
+    }
   </style>
 
   <body>
@@ -152,22 +155,33 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr id="med-row">
                     <td>
-                      <input type="text" name="nombre_medicamento" placeholder="Nombre del medicamento" class="input-field" />
+                      <input id="nombre_medicamento" type="text" name="nombre_medicamento" placeholder="Nombre del medicamento" class="input-field hide" />
+                      <span class="hide" id="mNomMed"></span>
                     </td>
                     <td>
-                      <input type="number" name="cantDosis" placeholder="Cantidad por dosis" class="input-field" />
+                      <input id="cantDosis" type="number" name="cantDosis" placeholder="Cantidad por dosis" class="input-field hide" />
+                      <span class="hide" id="mCantDosis"></span>
                     </td>
                     <td>
-                      <input type="text" name="horario" placeholder="Horario" class="input-field" />
+                      <input id="horario" type="text" name="horario" placeholder="Horario" class="input-field hide" />
+                      <span class="hide" id="mhorario"></span>
                     </td>
+                  </tr>
+                  <!-- ---------------------------------------------------------------------------------- -->
+                  <tr id="last-row">
+                    <td></td><td
+                    style="display: flex; justify-content: center;">
+                      <input id="btn-otro" type="button" value="+"
+                      /*style="color: #007bff; border-color: #007bff; border-radius: 4px; border: 1px solid; width: 70%; height: 90%;"*/
+                      class="add-button">
+                    </td><td></td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-
           <div class="add-button-container">
             <input type="submit" value="Agregar" class="add-button"/>
           </div>

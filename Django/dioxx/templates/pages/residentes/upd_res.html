@@ -8,6 +8,18 @@
     <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <title>DIOXX_666</title>
   </head>
+  <style>
+    .mensaje_error {
+      opacity: 75%;
+      width: 92%;
+      padding: 5px;
+      color: red;
+      border: 1px solid red;
+      border-radius: 10px;
+      display: block;
+      text-align: center;
+    }
+  </style>
   <body>
     {% include "base/header.html" %}
 
@@ -144,6 +156,7 @@
           </div>
         </form>
       </section>
-    </main>
+    </main>   
   </body>
+  <script src="{% static './js/validacionResidente.js' %}"></script>
 </html>
