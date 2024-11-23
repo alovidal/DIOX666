@@ -19,42 +19,35 @@
               <tr>
                 <th>Rut</th>
                 <th>Nombre</th>
-                <th>Medicamento</th>
+                <th>Medicamentos</th>
                 <th>Dosis Mañana</th>
                 <th>Dosis Tarde</th>
                 <th>Dosis Noche</th>
               </tr>
             </thead>
             <tbody>
-              {% if datos_residentes %} 
-                {% for dato in datos_residentes %} 
-                  {% if dato.medicamentos %} 
-                    {% for medicamento in dato.medicamentos %}
-                      <tr>
-                        {% if forloop.first %}
-                          <td rowspan="{{ dato.medicamentos|length }}">
-                            {{ dato.residente.rut }}
-                          </td>
-                          <td rowspan="{{ dato.medicamentos|length }}">
-                            {{ dato.residente.nombre }}
-                          </td>
-                        {% endif %}
-                        <td>{{ medicamento.nombre }}</td>
-                        <td>{{ medicamento.dosis_m }}</td>
-                        <td>{{ medicamento.dosis_t }}</td>
-                        <td>{{ medicamento.dosis_n }}</td>
-                      </tr>
-                    {% endfor %} 
-                  {% else %}
+              {% if datos_residentes %}
+                {% for dato in datos_residentes %}
                   <tr>
-                    <td>{{ dato.residente.rut }}</td>
-                    <td>{{ dato.residente.nombre }}</td>
-                    <td colspan="4">
-                      No hay medicamentos registrados para este residente.
+                    <td rowspan="1">{{ dato.residente.rut }}</td>
+                    <td rowspan="1">{{ dato.residente.nombre }}</td>
+                    <td>
+                      {% for medicamento in dato.medicamentos %}
+                        <div>{{ medicamento.nombre }} ;</div>
+                      {% endfor %}
+                    </td>
+                    <!-- Botones de dosis, sólo una vez por residente -->
+                    <td>
+                      <button class="btn-dosis" data-residente="{{ dato.residente.rut }}" data-periodo="mañana" onclick="toggleDosis(this)">Mañana</button>
+                    </td>
+                    <td>
+                      <button class="btn-dosis" data-residente="{{ dato.residente.rut }}" data-periodo="tarde" onclick="toggleDosis(this)">Tarde</button>
+                    </td>
+                    <td>
+                      <button class="btn-dosis" data-residente="{{ dato.residente.rut }}" data-periodo="noche" onclick="toggleDosis(this)">Noche</button>
                     </td>
                   </tr>
-                {% endif %} 
-              {% endfor %} 
+                {% endfor %}
               {% else %}
                 <tr>
                   <td colspan="6">No hay residentes registrados.</td>
@@ -64,11 +57,62 @@
           </table>
         </div>
       </section>
-      <div class="add-button-container">
-        <a href="{% url 'addRes' %}">
-          <button class="add-button">Agregar Residente</button>
-        </a>
-      </div>
     </main>
+
+    <script>
+      // Función para alternar el estado de los botones de dosis
+      function toggleDosis(button) {
+        const residenteRut = button.getAttribute('data-residente');
+        const periodo = button.getAttribute('data-periodo');
+        const key = `${residenteRut}_${periodo}`;  // Crear una clave única para cada botón
+
+        if (button.classList.contains('administered')) {
+          button.classList.remove('administered');
+          button.style.backgroundColor = "#ccc"; // Gris
+          localStorage.setItem(key, 'false'); // Guardar el estado como no administrado
+        } else {
+          button.classList.add('administered');
+          button.style.backgroundColor = "#28a745"; // Verde
+          localStorage.setItem(key, 'true'); // Guardar el estado como administrado
+        }
+      }
+
+      // Al cargar la página, restaurar los botones según el estado guardado en el localStorage
+      document.addEventListener('DOMContentLoaded', () => {
+        const now = new Date();
+        const lastReset = localStorage.getItem('lastReset');
+        const today = now.toISOString().split('T')[0];
+
+        // Si es un nuevo día, restablecer los botones
+        if (lastReset !== today) {
+          document.querySelectorAll('.btn-dosis').forEach(button => {
+            const residenteRut = button.getAttribute('data-residente');
+            const periodo = button.getAttribute('data-periodo');
+            const key = `${residenteRut}_${periodo}`;
+
+            button.classList.remove('administered');
+            button.style.backgroundColor = "#ccc"; // Gris
+            localStorage.setItem(key, 'false'); // Guardar el estado como no administrado
+          });
+          localStorage.setItem('lastReset', today); // Guardar la fecha de reseteo
+        } else {
+          // Restaurar el estado de los botones desde el localStorage
+          document.querySelectorAll('.btn-dosis').forEach(button => {
+            const residenteRut = button.getAttribute('data-residente');
+            const periodo = button.getAttribute('data-periodo');
+            const key = `${residenteRut}_${periodo}`;
+
+            const dosisAdministrada = localStorage.getItem(key);
+            if (dosisAdministrada === 'true') {
+              button.classList.add('administered');
+              button.style.backgroundColor = "#28a745"; // Verde
+            } else {
+              button.classList.remove('administered');
+              button.style.backgroundColor = "#ccc"; // Gris
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>

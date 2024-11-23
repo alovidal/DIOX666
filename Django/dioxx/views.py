@@ -975,22 +975,27 @@ def delMed(request, pk):
 
 @login_required 
 def listResMedicamentos(request):
-    # Inicializar listas vacías para residentes, detalles, recetas y medicamentos
-    residentes = []  # Puedes mantener la consulta a la base de datos si decides utilizarla más adelante
+    # Obtener todos los residentes
+    residentes = residente.objects.all()
     datos_residentes = []
 
-    # Si decides mantener la consulta a residentes:
-    # residentes = residente.objects.all()
-
-    # Agregar la lógica para agregar residentes vacíos a datos_residentes
     for res in residentes:
+        # Recuperar los medicamentos asociados a cada residente
+        medicamentos = []
+        recetas = receta.objects.filter(residente=res)
+        for receta_item in recetas:
+            detalles_receta = detalleReceta.objects.filter(idReceta=receta_item)
+            for detalle in detalles_receta:
+                medicamento = detalle.idMedicamento
+                medicamentos.append(medicamento)
+        
         datos_residentes.append({
             'residente': res,
-            'medicamentos': []  # Array vacío para medicamentos
+            'medicamentos': medicamentos
         })
 
     context = {
-        'datos_residentes': datos_residentes  # Mantener datos_residentes como está
+        'datos_residentes': datos_residentes
     }
     return render(request, "pages/medicamentos/list_res_medicamentos.html", context)
 
