@@ -389,29 +389,61 @@ def findPer(request, pk):
 @login_required 
 def updPer(request):
     if request.method == "POST":
-        pRut = request.POST["rut"]
+        pRut = request.POST["rutdata"]
         pNombre = request.POST["nombre"]
         pApellido = request.POST["apellido"]
         pCargo = request.POST["cargo"]
 
         cargoPer = cargoPersonal.objects.get(idCargo = pCargo)
 
-        perObj = personal(
-            rut = pRut,
-            nombre = pNombre,
-            apellido = pApellido,
-            cargo = cargoPer
-        )
-        perObj.save()
+        """ Test del rut """
+        ruttest = True
 
-        cargos = cargoPersonal.objects.all()
+        # Largo del rut
+        if len(pRut) < 9 or len(pRut) > 10:
+            ruttest = False
+        # Primeros 8 caracteres = dígitos
+        elif not pRut[:-2].isdigit():
+            ruttest = False
+        # Penúltimo carácter = '-'
+        elif pRut[-2] != '-':
+            ruttest = False
+        # Último carácter = dígito, 'K' o 'k'
+        elif not (pRut[-1].isdigit() or pRut[-1].lower() == 'k'):
+            ruttest = False
+        """ ----------------------------------------------------- """
 
-        context = {
-            "persona": perObj,
-            "cargos": cargos,
-            "mensaje": "Modificación exitosa"
-        }
-        return render(request, "pages/personal/upd_per.html", context)
+        if (ruttest and len(pNombre) > 3 and len(pApellido) > 3):
+            perObj = personal(
+                rut = pRut,
+                nombre = pNombre,
+                apellido = pApellido,
+                cargo = cargoPer
+            )
+            perObj.save()
+
+            """ objetos para el render """
+            cargos = cargoPersonal.objects.all()
+
+            context = {
+                "persona": perObj,
+                "cargos": cargos,
+                "mensaje": "Modificación exitosa"
+            }
+            return render(request, "pages/personal/upd_per.html", context)
+        else:
+            cargos = cargoPersonal.objects.all()
+            dpersonal = personal.objects.get(rut = pRut)
+            context = {
+                "mensaje":"Datos inválidos o rut ya existe",
+                "cargos": cargos,
+                "rut": pRut,
+                "nombre": pNombre,
+                "apellido": pApellido,
+                "idcargo": pCargo,
+                "persona":dpersonal
+            }
+            return render(request, "pages/personal/upd_per.html", context)
 
 @login_required 
 def delPer(request, pk):
