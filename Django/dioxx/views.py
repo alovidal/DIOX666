@@ -1,5 +1,4 @@
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -8,6 +7,8 @@ from .models import *
 from datetime import datetime, timedelta
 from django.utils.timezone import localtime, now, make_aware
 import re
+from django.http import Http404
+
 # Create your views here.
 
 """ 
@@ -25,6 +26,7 @@ def index(request):
     context = {}
     return render(request, "pages/index.html", context)
 
+@login_required
 def notificaciones(request):
     # Obtener la fecha y hora local actual
     today = localtime(now()).date()
@@ -960,31 +962,39 @@ def listResMedicamentos(request):
     }
     return render(request, "pages/medicamentos/list_res_medicamentos.html", context)
 
-@login_required 
+@login_required
 def dosis(request):
-    # Obtener todos los medicamentos
-    medicamentos = medicamento.objects.all()
-    datos_medicamentos = []
+    # Obtener todos los residentes
+    residentes = list(residente.objects.all())
 
-    for med in medicamentos:
-        # Obtener detalles de receta para el medicamento actual
-        detalles = detalleReceta.objects.filter(idMedicamento=med)
-        residentes_con_medicamento = []
+    # Obtener el índice del residente actual desde la URL o inicializar en 0
+    residente_index = int(request.GET.get("residente_index", 0))
+    if residente_index < 0 or residente_index >= len(residentes):
+        raise Http404("Residente no encontrado")
 
-        for detalle in detalles:
-            residente_obj = detalle.idReceta.residente  # Obtener el residente asociado a la receta
-            residentes_con_medicamento.append({
-                'rut': residente_obj.rut,
-                'nombre': f"{residente_obj.nombre} {residente_obj.apellido}",
-                'dosis': ""  # Campo de dosis vacío
-            })
+    # Obtener al residente actual
+    residente_actual = residentes[residente_index]
 
-        datos_medicamentos.append({
-            'medicamento': med.nombre,
-            'residentes': residentes_con_medicamento
-        })
+    # Obtener medicamentos del residente actual a través de sus recetas
+    recetas = receta.objects.filter(residente=residente_actual)
+    detalles = detalleReceta.objects.filter(idReceta__in=recetas)
+    medicamentos = [
+        {
+            "nombre": detalle.idMedicamento.nombre,
+            "tipoDosis": detalle.idMedicamento.tipoDosis,
+            "descripcion": detalle.idMedicamento.descripcion,
+            "cantDosis": detalle.cantDosis,
+            "horario": detalle.horario,
+        }
+        for detalle in detalles
+    ]
 
+    # Contexto para renderizar la página
     context = {
-        'datos_medicamentos': datos_medicamentos
+        "residente_actual": residente_actual,
+        "medicamentos": medicamentos,
+        "residente_index": residente_index,
+        "total_residentes": len(residentes),
     }
+
     return render(request, "pages/medicamentos/dosis.html", context)
