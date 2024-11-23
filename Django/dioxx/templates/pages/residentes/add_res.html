@@ -8,9 +8,22 @@
     
     <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
-    <script src="{% static '/js/valResidente.js' %}"></script>
     <title>DIOXX_666 - Registro de Residente</title>
   </head>
+
+  <style>
+    .mensaje_error {
+      opacity: 75%;
+      width: 92%;
+      padding: 5px;
+      color: red;
+      border: 1px solid red;
+      border-radius: 10px;
+      display: block;
+      text-align: center;
+    }
+  </style>
+
   <body>
 
     {% include "base/header.html" %}
@@ -27,42 +40,97 @@
           
           <div class="resident-form-container">
             <table class="resident-table">
+              <!-- ------------------------------------------------ -->
               <tr>
                 <td class="label">RUT:</td>
                 <td>
-                  <input id="rut" type="text" name="rut" placeholder="Ingrese el RUT" class="input-field" />
+                  {% if rut %}
+                  <input id="rut" type="text" name="rut" value="{{rut}}" placeholder="Ingrese el RUT" class="input-field" required/>
+                  {% else %}
+                  <input id="rut" type="text" name="rut" placeholder="Ingrese el RUT" class="input-field" required/>
+                  {% endif %}
                 </td>
               </tr>
+              <tr>
+                <td></td>
+                <td><span id="mrut" name="mrut"></span></td>
+              </tr>
+              <!-- ------------------------------------------------ -->
               <tr>
                 <td class="label">Nombre:</td>
                 <td>
-                  <input id="nombre" type="text" name="nombre" placeholder="Ingrese el nombre" class="input-field" />
+                  {% if nombre %}
+                  <input id="nombre" type="text" name="nombre" value="{{nombre}}" placeholder="Ingrese el nombre" class="input-field" required/>
+                  {% else %}
+                  <input id="nombre" type="text" name="nombre" placeholder="Ingrese el nombre" class="input-field" required/>
+                  {% endif %}
                 </td>
               </tr>
+              <tr>
+                <td></td>
+                <td><span id="mnombre" name="mnombre"></span></td>
+              </tr>
+              <!-- ------------------------------------------------ -->
               <tr>
                 <td class="label">Apellido:</td>
                 <td>
-                  <input id="apellido" type="text" name="apellido" placeholder="Ingrese el apellido" class="input-field" />
+                  {% if apellido %}
+                  <input id="apellido" type="text" name="apellido" value="{{apellido}}" placeholder="Ingrese el apellido" class="input-field" required/>
+                  {% else %}
+                  <input id="apellido" type="text" name="apellido" placeholder="Ingrese el apellido" class="input-field" required/>
+                  {% endif %}
                 </td>
               </tr>
+              <tr>
+                <td></td>
+                <td><span id="mapellido" name="mapellido"></span></td>
+              </tr>
+              <!-- ------------------------------------------------ -->
               <tr>
                 <td class="label">Edad:</td>
                 <td>
-                  <input id="edad" type="number" name="edad" placeholder="Ingrese la edad" class="input-field" />
+                  {% if edad %}
+                  <input id="edad" type="number" name="edad" value="{{edad}}" placeholder="Ingrese la edad" class="input-field" required/>
+                  {% else %}
+                  <input id="edad" type="number" name="edad" placeholder="Ingrese la edad" class="input-field" required/>
+                  {% endif %}
                 </td>
               </tr>
+              <tr>
+                <td></td>
+                <td><span id="medad" name="medad"></span></td>
+              </tr>
+              <!-- ------------------------------------------------ -->
               <tr>
                 <td class="label">Contactos:</td>
                 <td>
-                  <input type="text" name="contactos" placeholder="Ingrese contactos de familiares" class="input-field" />
+                  {% if contactos %}
+                  <input id="contactos" type="text" name="contactos" value="{{contactos}}" placeholder="Ingrese contactos de familiares" class="input-field" />
+                  {% else %}
+                  <input id="contactos" type="text" name="contactos" placeholder="Ingrese contactos de familiares" class="input-field" />
+                  {% endif %}
                 </td>
               </tr>
               <tr>
+                <td></td>
+                <td><span id="mcontactos" name="mcontactos"></span></td>
+              </tr>
+              <!-- ------------------------------------------------ -->
+              <tr>
                 <td class="label">Número de emergencia:</td>
                 <td>
-                  <input type="text" name="nroEmergencia" placeholder="Ingrese número de emergencia" class="input-field" />
+                  {% if nroEmergencia %}
+                  <input id="nroEmergencia" type="text" name="nroEmergencia" value="{{nroEmergencia}}" placeholder="Ingrese número de emergencia" class="input-field" />
+                  {% else %}
+                  <input id="nroEmergencia" type="text" name="nroEmergencia" placeholder="Ingrese número de emergencia" class="input-field" />
+                  {% endif %}
                 </td>
               </tr>
+              <tr>
+                <td></td>
+                <td><span id="mnroemer" name="mnroemer"></span></td>
+              </tr>
+              <!-- ------------------------------------------------ -->
               <tr>
                 <td class="label">Exámenes:</td>
                 <td>
@@ -101,12 +169,12 @@
           </div>
 
           <div class="add-button-container">
-            <input onclick="validarAddResidente()" type="submit" value="Agregar" class="add-button"/>
+            <input type="submit" value="Agregar" class="add-button"/>
           </div>
         </form>
       </section>
     </main>
-    <script src="{% static '/js/validacionResidente.js' %}"></script>
   </body>
+  <script src="{% static './js/validacionResidente.js' %}"></script>
 </html>
     

@@ -9,10 +9,23 @@
     <title>DIOXX_666</title>
 
   </head>
+  <style>
+    .mensaje_error {
+      opacity: 75%;
+      width: 92%;
+      padding: 5px;
+      color: red;
+      border: 1px solid red;
+      border-radius: 10px;
+      display: block;
+      text-align: center;
+    }
+  </style>
   <body>
     {% include "base/header.html" %}
 
     <main class="main-content">
+      <input type="text" id="rut" name="rut" style="display: none;"><span id="mrut" name="mrut" style="display: none;"></span>
       <h3 id="volver"><a href="{% url 'verPer' pk=persona.rut %}">Volver</a></h3>
 
       {% if mensaje %}
@@ -29,18 +42,42 @@
           <form method="POST" action="{% url 'updPer' %}">
             {% csrf_token %}
             <table class="resident-table">
+              <!-- -------------------------------------------------------------------- -->
               <tr>
                 <td class="label">Rut:</td>
-                <td><input class="input-field" type="text" name="rut" value="{{ persona.rut }}" readonly /></td>
+                <td><input class="input-field" type="text" name="rutdata" value="{{ persona.rut }}" readonly /></td>
               </tr>
+              <!-- -------------------------------------------------------------------- -->
               <tr>
                 <td class="label">Nombre:</td>
-                <td><input class="input-field" type="text" name="nombre" value="{{ persona.nombre }}" required /></td>
+                <td>
+                  {% if nombre %}
+                  <input type="text" id="nombre" name="nombre" class="input-field" required value="{{nombre}}" />
+                  {% else %}
+                  <input type="text" id="nombre" name="nombre" class="input-field" required value="{{ persona.nombre }}"/>
+                  {% endif %}
+                </td>
               </tr>
               <tr>
-                <td class="label">Apellido:</td>
-                <td><input class="input-field" type="text" name="apellido" value="{{ persona.apellido }}" required /></td>
+                <td></td>
+                <td><span id="mnombre" name="mnombre"></span></td>
               </tr>
+              <!-- -------------------------------------------------------------------- -->
+              <tr>
+                <td class="label">Apellido:</td>
+                <td>
+                  {% if apellido %}
+                  <input type="text" id="apellido" name="apellido" class="input-field" required value="{{apellido}}" />
+                  {% else %}
+                  <input type="text" id="apellido" name="apellido" class="input-field" required value="{{ persona.apellido }}"/>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><span id="mapellido" name="mapellido"></span></td>
+              </tr>
+              <!-- -------------------------------------------------------------------- -->
               <tr>
                 <td class="label">Cargo:</td>
                 <td>
@@ -53,6 +90,7 @@
                   </select>
                 </td>
               </tr>
+              <!-- -------------------------------------------------------------------- -->
             </table>
             <div class="add-button-container">
                 <input class="add-button" type="submit" value="Actualizar">
@@ -68,4 +106,5 @@
       </div>
     </main>
   </body>
+  <script src="{% static './js/valPersonal.js' %}"></script>
 </html>

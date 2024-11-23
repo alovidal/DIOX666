@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate
 from .models import *
 from datetime import datetime, timedelta
 from django.utils.timezone import localtime, now, make_aware
+import re
 # Create your views here.
 
 """ 
@@ -114,42 +115,87 @@ def addRes(request):
         contactos = request.POST["contactos"]
         nroEmergencia = request.POST["nroEmergencia"]
 
-        nuevo_residente = residente(
-            rut=rut, 
-            nombre=nombre, 
-            apellido=apellido,  
-            edad=edad, 
-            contactos=contactos, 
-            nroEmergencia=nroEmergencia
-        )
-        nuevo_residente.save()
+        """ Test del rut """
+        dresidentes = residente.objects.all()
+        ruttest = True
 
-        # Crear el medicamento
-        medicamento_nombre = request.POST["nombre_medicamento"]
-        nuevo_medicamento = medicamento(nombre=medicamento_nombre)
-        nuevo_medicamento.save()
+        # Rut repetido en la base de datos
+        for per in dresidentes:
+            if per.rut == rut:
+                ruttest = False
+        # Largo del rut
+        if len(rut) < 9 or len(rut) > 10:
+            ruttest = False
+        # Primeros 8 caracteres = dígitos
+        elif not rut[:-2].isdigit():
+            ruttest = False
+        # Penúltimo carácter = '-'
+        elif rut[-2] != '-':
+            ruttest = False
+        # Último carácter = dígito, 'K' o 'k'
+        elif not (rut[-1].isdigit() or rut[-1].lower() == 'k'):
+            ruttest = False
+        """ ----------------------------------------------------- """
 
-        # Crear la receta
-        nueva_receta = receta(residente=nuevo_residente)
-        nueva_receta.save()
+        """ Test de los contactos """
+        nrotest = True
+        # Al menos 9 dígitos
+        if not re.match(r'^\d{9,}$', contactos):  
+            nrotest = False
+        elif not re.match(r'^\d{9,}$', nroEmergencia):  
+            nrotest = False
+        elif len(contactos) < 9 or len(nroEmergencia) < 9 or len(nroEmergencia) > 12:
+            nrotest = False
+        """ ----------------------------------------------------- """
 
-        # Crear el detalle de la receta
-        cantidad_dosis = request.POST["cantDosis"]
-        horario = request.POST["horario"]
-        nuevo_detalle = detalleReceta(
-            idReceta=nueva_receta,
-            idMedicamento=nuevo_medicamento,
-            cantDosis=cantidad_dosis,
-            horario=horario,
-        )
-        nuevo_detalle.save()
+        if (ruttest and len(nombre) > 3 and len(apellido) > 3 and len(edad) < 3 and nrotest):
+            nuevo_residente = residente(
+                rut=rut, 
+                nombre=nombre, 
+                apellido=apellido,  
+                edad=edad, 
+                contactos=contactos, 
+                nroEmergencia=nroEmergencia
+            )
+            nuevo_residente.save()
 
-        ress = residente.objects.all()
-        context = {
-            "residentes": ress,
-        }
-        return render(request, "pages/residentes/list_res.html", context)
-    
+            # Crear el medicamento
+            medicamento_nombre = request.POST["nombre_medicamento"]
+            nuevo_medicamento = medicamento(nombre=medicamento_nombre)
+            nuevo_medicamento.save()
+
+            # Crear la receta
+            nueva_receta = receta(residente=nuevo_residente)
+            nueva_receta.save()
+
+            # Crear el detalle de la receta
+            cantidad_dosis = request.POST["cantDosis"]
+            horario = request.POST["horario"]
+            nuevo_detalle = detalleReceta(
+                idReceta=nueva_receta,
+                idMedicamento=nuevo_medicamento,
+                cantDosis=cantidad_dosis,
+                horario=horario,
+            )
+            nuevo_detalle.save()
+
+            ress = residente.objects.all()
+            context = {
+                "residentes": ress,
+            }
+            return render(request, "pages/residentes/list_res.html", context)
+        else:
+            context = {
+                "mensaje":"Datos inválidos o rut ya existe",
+                "rut":rut,
+                "nombre":nombre,
+                "apellido":apellido,
+                "edad":edad,
+                "contactos":contactos,
+                "nroEmergencia":nroEmergencia,
+            }
+            return render(request, "pages/residentes/add_res.html", context)
+
     # Respuesta para el caso GET
     return render(request, "pages/residentes/add_res.html")
 
@@ -260,7 +306,7 @@ def verPer(request, pk):
         }
         return render(request, "pages/personal/ver_per.html", context)
 
-@login_required     
+@login_required
 def addPer(request):
     if request.method == "POST":
         pRut = request.POST["rut"]
@@ -269,24 +315,58 @@ def addPer(request):
         pCargo = request.POST["cargo"]
 
         cargoPer = cargoPersonal.objects.get(idCargo = pCargo)
+        
+        """ Test del rut """
+        dpersonal = personal.objects.all()
+        ruttest = True
 
-        perObj = personal(
-            rut = pRut,
-            nombre = pNombre,
-            apellido = pApellido,
-            cargo = cargoPer
-        )
-        perObj.save()
+        # Rut repetido en la base de datos
+        for per in dpersonal:
+            if per.rut == pRut:
+                ruttest = False
+        # Largo del rut
+        if len(pRut) < 9 or len(pRut) > 10:
+            ruttest = False
+        # Primeros 8 caracteres = dígitos
+        elif not pRut[:-2].isdigit():
+            ruttest = False
+        # Penúltimo carácter = '-'
+        elif pRut[-2] != '-':
+            ruttest = False
+        # Último carácter = dígito, 'K' o 'k'
+        elif not (pRut[-1].isdigit() or pRut[-1].lower() == 'k'):
+            ruttest = False
+        """ ----------------------------------------------------- """
 
-        cargos = cargoPersonal.objects.all()
+        if (ruttest and len(pNombre) > 3 and len(pApellido) > 3):
+            perObj = personal(
+                rut = pRut,
+                nombre = pNombre,
+                apellido = pApellido,
+                cargo = cargoPer
+            )
+            perObj.save()
 
-        personas = personal.objects.all()
+            """ objetos para el render """
+            cargos = cargoPersonal.objects.all()
+            personas = personal.objects.all()
 
-        context = {
-            "personal": personas,
-            "cargos": cargos,
-        }
-        return render(request, "pages/personal/list_per.html", context)
+            context = {
+                "personal": personas,
+                "cargos": cargos,
+            }
+            return render(request, "pages/personal/list_per.html", context)
+        else:
+            cargos = cargoPersonal.objects.all()
+            context = {
+                "mensaje":"Datos inválidos o rut ya existe",
+                "cargos": cargos,
+                "rut": pRut,
+                "nombre": pNombre,
+                "apellido": pApellido,
+                "idcargo": pCargo
+            }
+            return render(request, "pages/personal/add_per.html", context)
     
     # Respuesta para el caso GET
     cargos = cargoPersonal.objects.all()  # Obtener todos los cargos

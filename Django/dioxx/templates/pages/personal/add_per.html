@@ -7,8 +7,21 @@
     <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <title>DIOXX_666</title>
-
   </head>
+
+  <style>
+    .mensaje_error {
+      opacity: 75%;
+      width: 92%;
+      padding: 5px;
+      color: red;
+      border: 1px solid red;
+      border-radius: 10px;
+      display: block;
+      text-align: center;
+    }
+  </style>
+
   <body>
     {% include "base/header.html" %}
 
@@ -23,37 +36,86 @@
           <form method="POST" action="{% url 'addPer' %}">  
             {% csrf_token %}
             <table class="resident-table">
+              <!-- -------------------------------------------------------------------- -->
               <tr>
                 <td class="label">Rut:</td>
-                <td><input type="text" name="rut" class="input-field" required /></td> 
+                <td>
+                  {% if rut %}
+                  <input type="text" id="rut" name="rut" class="input-field" required value="{{rut}}" />
+                  {% else %}
+                  <input type="text" id="rut" name="rut" class="input-field" required />
+                  {% endif %}
+                </td>
               </tr>
+              <tr>
+                <td></td>
+                <td><span id="mrut" name="mrut"></span></td>
+              </tr>
+              <!-- -------------------------------------------------------------------- -->
               <tr>
                 <td class="label">Nombre:</td>
-                <td><input type="text" name="nombre" class="input-field" required /></td>  <!-- Sin valor predeterminado -->
+                <td>
+                  {% if nombre %}
+                  <input type="text" id="nombre" name="nombre" class="input-field" required value="{{nombre}}" />
+                  {% else %}
+                  <input type="text" id="nombre" name="nombre" class="input-field" required />
+                  {% endif %}
+                </td>
               </tr>
               <tr>
-                <td class="label">Apellido:</td>
-                <td><input type="text" name="apellido" class="input-field" required /></td>  <!-- Sin valor predeterminado -->
+                <td></td>
+                <td><span id="mnombre" name="mnombre"></span></td>
               </tr>
+              <!-- -------------------------------------------------------------------- -->
+              <tr>
+                <td class="label">Apellido:</td>
+                <td>
+                  {% if apellido %}
+                  <input type="text" id="apellido" name="apellido" class="input-field" required value="{{apellido}}" />
+                  {% else %}
+                  <input type="text" id="apellido" name="apellido" class="input-field" required />
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><span id="mapellido" name="mapellido"></span></td>
+              </tr>
+              <!-- -------------------------------------------------------------------- -->
               <tr>
                 <td class="label">Cargo:</td>
                 <td>
                   <select name="cargo" required>
+                    {% if idcargo %}
+                    <option value="" >Seleccionar</option>
+                    {% else %}
                     <option value="" selected>Seleccionar</option>
+                    {% endif %}
+
                     {% for cargo in cargos %}
+                    {% if idcargo == cargo.idCargo %}
+                      <option value="{{ cargo.idCargo }}" selected>{{ cargo.descripcion }}</option>
+                    {% else %}
                       <option value="{{ cargo.idCargo }}">{{ cargo.descripcion }}</option>
+                    {% endif %}
                     {% endfor %}
+
                   </select>
                 </td>
               </tr>
+              {% if mensaje %}
+              <tr><td></td><td>
+                <span class="mensaje_error">{{mensaje}}</span>
+              </td></tr>
+              {% endif %}
             </table>
             <div class="add-button-container">
-                <input type="submit" class="add-button" value="Agregar">
+              <input type="submit" class="add-button" value="Agregar">
             </div>
           </form>
         </div>
       </div>
     </main>
-    <script src="{% static '/js/valPersonal.js' %}"></script>
   </body>
+  <script src="{% static './js/valPersonal.js' %}"></script>
 </html>
