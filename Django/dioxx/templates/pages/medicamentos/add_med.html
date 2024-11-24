@@ -1,58 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
     <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <title>DIOXX_666</title>
-
-</head>
-<body>
+  </head>
+  <body>
     {% include "base/header.html" %}
 
     <main class="main-content">
-        <h3 id="volver">
-            <a href="{% url 'listMed' %}">Volver</a>
-        </h3>
+      <h3 id="volver">
+        <a href="{% url 'listMed' %}">Volver</a>
+      </h3>
 
-        {% if mensaje %}
-        <div>
-            <p>{{ mensaje }}</p>
-        </div>
+      {% if mensaje %}
+      <div style="text-align: center; color: green; font-weight: bold; font-size: 1.2em;">
+        <p>{{ mensaje }}</p>
+      </div>
       {% endif %}
       <section class="resident-section">
         <div>
-            <h1 class="section-title">Agregar Medicamento</h1>
-            <div class="resident-form-container">
-                <form method="POST" action="{% url 'addMed' %}">
-                    {% csrf_token %}
-                    <table class="resident-table">
-                        <tr>
-                            <td class="label">Nombre:</td>
-                            <td><input type="text" name="nombre" class="input-field" required /></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Dosis:</td>
-                            <td><input type="text" name="tipoDosis" class="input-field" required /></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Descripción:</td>
-                            <td><input type="text" name="descripcion" class="input-field" required /></td>
-                        </tr>
-                    </table>
-                    <div class="add-button-container">
-                        <input
-                            type="submit"
-                            value="Agregar Medicamento"
-                            class="add-button"
-                        />
-                    </div>
-                </form>
-            </div>
+          <h1 class="section-title">Agregar Medicamento</h1>
+          <div class="resident-form-container">
+            <form method="POST" action="{% url 'addMed' %}">
+              {% csrf_token %}
+              <table class="resident-table">
+                <tr>
+                  <td class="label">Nombre:</td>
+                  <td>
+                    <input
+                      id="nombre"
+                      type="text"
+                      name="nombre"
+                      class="input-field"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Dosis:</td>
+                  <td>
+                    <input
+                      id="tipoDosis"
+                      type="text"
+                      name="tipoDosis"
+                      class="input-field"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Descripción:</td>
+                  <td>
+                    <input
+                      id="descripcion"
+                      type="text"
+                      name="descripcion"
+                      class="input-field"
+                      required
+                    />
+                  </td>
+                </tr>
+              </table>
+              <div
+                id="mensaje-error"
+                style="
+                  display: none;
+                  color: red;
+                  margin-bottom: 5vh;
+                  width: 20vw;
+                  height: 5vh;
+                "
+              ></div>
+              <div class="add-button-container">
+                <input
+                  type="submit"
+                  value="Agregar Medicamento"
+                  class="add-button"
+                />
+              </div>
+            </form>
+          </div>
         </div>
       </section>
     </main>
-</body>
+    <script src="{% static 'js/valMed.js' %}"></script>
+  </body>
 </html>

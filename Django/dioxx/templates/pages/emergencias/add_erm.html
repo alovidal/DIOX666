@@ -15,7 +15,11 @@
       <h3 id="volver">
         <a href="{% url 'listErm' %}">Volver</a>
       </h3>
-
+      {% if mensaje %}
+      <div>
+        <p>{{ mensaje }}</p>
+      </div>
+      {% endif %}
       <div class="resident-section">
         <h1 class="main-title">Agregar Emergencia</h1>
         <div class="resident-form-container">
