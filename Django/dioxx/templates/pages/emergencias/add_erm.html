@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{% static './css/styleList.css' %}" />
     <link rel="stylesheet" href="{% static './css/styleAdd.css' %}" />
     <title>DIOXX_666</title>
-
   </head>
   <body>
     {% include "base/header.html" %}
@@ -18,9 +17,7 @@
       </h3>
 
       <div class="resident-section">
-        <h1 class="main-title">
-          Agregar Emergencia
-        </h1>
+        <h1 class="main-title">Agregar Emergencia</h1>
         <div class="resident-form-container">
           <form method="POST" action="{% url 'addErm' %}">
             {% csrf_token %}
@@ -28,7 +25,7 @@
               <tr>
                 <td class="label">Residente:</td>
                 <td>
-                  <select name="residente" required>
+                  <select  name="residente" required>
                     <option value="" selected>Seleccionar Residente</option>
                     {% for res in residentes %}
                     <option value="{{ res.rut }}">{{ res }}</option>
@@ -38,13 +35,38 @@
               </tr>
               <tr>
                 <td class="label">Fecha:</td>
-                <td><input type="date" name="fecha" class="input-field" required /></td>
+                <td>
+                  <input
+                    id="fecha"
+                    type="date"
+                    name="fecha"
+                    class="input-field"
+                    required
+                  />
+                </td>
               </tr>
               <tr>
                 <td class="label">Descripción:</td>
-                <td ><textarea name="descripcion" class="input-field" required></textarea></td>
+                <td>
+                  <textarea
+                    id="descripcion"
+                    name="descripcion"
+                    class="input-field"
+                    required
+                  ></textarea>
+                </td>
               </tr>
             </table>
+            <div
+              id="mensaje-error"
+              style="
+                display: none;
+                color: red;
+                margin-bottom: 5vh;
+                width: 20vw;
+                height: 5vh;
+              "
+            ></div>
             <div class="add-button-container">
               <input
                 type="submit"
@@ -56,5 +78,6 @@
         </div>
       </div>
     </main>
+    <script src="{% static 'js/valEmergencia.js' %}"></script>
   </body>
 </html>
