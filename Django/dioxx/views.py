@@ -109,6 +109,7 @@ def verRes(request, pk):
 @login_required
 def addRes(request):
     if request.method == "POST": 
+        print(request.POST)
         # Crear el residente
         rut = request.POST["rut"]
         nombre = request.POST["nombre"]
@@ -121,36 +122,20 @@ def addRes(request):
         dresidentes = residente.objects.all()
         ruttest = True
 
-        # Rut repetido en la base de datos
         for per in dresidentes:
             if per.rut == rut:
                 ruttest = False
-        # Largo del rut
-        if len(rut) < 9 or len(rut) > 10:
+        if len(rut) < 9 or len(rut) > 10 or not rut[:-2].isdigit() or rut[-2] != '-' or not (rut[-1].isdigit() or rut[-1].lower() == 'k'):
             ruttest = False
-        # Primeros 8 caracteres = dígitos
-        elif not rut[:-2].isdigit():
-            ruttest = False
-        # Penúltimo carácter = '-'
-        elif rut[-2] != '-':
-            ruttest = False
-        # Último carácter = dígito, 'K' o 'k'
-        elif not (rut[-1].isdigit() or rut[-1].lower() == 'k'):
-            ruttest = False
-        """ ----------------------------------------------------- """
 
         """ Test de los contactos """
         nrotest = True
-        # Al menos 9 dígitos
-        if not re.match(r'^\d{9,}$', contactos):  
+        if not re.match(r'^\d{9,}$', contactos) or not re.match(r'^\d{9,}$', nroEmergencia):
             nrotest = False
-        elif not re.match(r'^\d{9,}$', nroEmergencia):  
+        if len(contactos) < 9 or len(nroEmergencia) < 9 or len(nroEmergencia) > 12:
             nrotest = False
-        elif len(contactos) < 9 or len(nroEmergencia) < 9 or len(nroEmergencia) > 12:
-            nrotest = False
-        """ ----------------------------------------------------- """
 
-        if (ruttest and len(nombre) > 3 and len(apellido) > 3 and len(edad) < 3 and nrotest):
+        if ruttest and len(nombre) > 3 and len(apellido) > 3 and len(edad) < 3 and nrotest:
             nuevo_residente = residente(
                 rut=rut, 
                 nombre=nombre, 
@@ -160,26 +145,36 @@ def addRes(request):
                 nroEmergencia=nroEmergencia
             )
             nuevo_residente.save()
-
-            # Crear el medicamento
-            medicamento_nombre = request.POST["nombre_medicamento"]
-            nuevo_medicamento = medicamento(nombre=medicamento_nombre)
-            nuevo_medicamento.save()
-
             # Crear la receta
             nueva_receta = receta(residente=nuevo_residente)
             nueva_receta.save()
 
-            # Crear el detalle de la receta
-            cantidad_dosis = request.POST["cantDosis"]
-            horario = request.POST["horario"]
-            nuevo_detalle = detalleReceta(
-                idReceta=nueva_receta,
-                idMedicamento=nuevo_medicamento,
-                cantDosis=cantidad_dosis,
-                horario=horario,
-            )
-            nuevo_detalle.save()
+            """ Procesar los medicamentos y sus detalles """
+            identificadores = request.POST.get("identificadores", "").split(",")  # Asegúrate de que `identificadores` llegue como un string separado por comas
+
+            for identificador in identificadores:
+                try:
+                    medicamento_nombre = request.POST[f"nombre_medicamento-{identificador}"]
+                    cantidad_dosis = request.POST[f"cantDosis-{identificador}"]
+                    horario = request.POST[f"horario-{identificador}"]
+
+                    if medicamento_nombre and cantidad_dosis and horario:
+                        # Verificar si el medicamento ya existe
+                        nuevo_medicamento, created = medicamento.objects.get_or_create(
+                            nombre=medicamento_nombre
+                        )
+
+                        # Crear el detalle de la receta
+                        nuevo_detalle = detalleReceta(
+                            idReceta=nueva_receta,
+                            idMedicamento=nuevo_medicamento,
+                            cantDosis=cantidad_dosis,
+                            horario=horario,
+                        )
+                        nuevo_detalle.save()
+                except KeyError as e:
+                    print(f"Clave faltante en request.POST: {e}")
+                    continue
 
             ress = residente.objects.all()
             context = {
@@ -188,18 +183,18 @@ def addRes(request):
             return render(request, "pages/residentes/list_res.html", context)
         else:
             context = {
-                "mensaje":"Datos inválidos o rut ya existe",
-                "rut":rut,
-                "nombre":nombre,
-                "apellido":apellido,
-                "edad":edad,
-                "contactos":contactos,
-                "nroEmergencia":nroEmergencia,
+                "mensaje": "Datos inválidos o rut ya existe",
+                "rut": rut,
+                "nombre": nombre,
+                "apellido": apellido,
+                "edad": edad,
+                "contactos": contactos,
+                "nroEmergencia": nroEmergencia,
             }
             return render(request, "pages/residentes/add_res.html", context)
 
-    # Respuesta para el caso GET
     return render(request, "pages/residentes/add_res.html")
+
 
 @login_required    
 def findRes(request, pk):
