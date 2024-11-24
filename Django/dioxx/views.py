@@ -135,7 +135,7 @@ def addRes(request):
         if len(contactos) < 9 or len(nroEmergencia) < 9 or len(nroEmergencia) > 12:
             nrotest = False
 
-        if ruttest and len(nombre) > 3 and len(apellido) > 3 and len(edad) < 3 and nrotest:
+        if ruttest and (len(nombre) > 3) and (len(apellido) > 3) and nrotest:
             nuevo_residente = residente(
                 rut=rut, 
                 nombre=nombre, 
