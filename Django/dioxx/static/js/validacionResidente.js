@@ -129,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     idlist = [];
     const medrow = document.getElementById("med-row");
     const lastrow = document.getElementById("last-row");
+    const identificadoresInput = document.getElementById("identificadores");
 
     boton.addEventListener("click", () => {
         idcount++;
@@ -139,16 +140,19 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const cmedname = newelement.querySelector("#nombre_medicamento");
         cmedname.id = `nombre_medicamento-${idcount}`;
+        cmedname.name = `nombre_medicamento-${idcount}`;
         cmedname.classList.add("nom-med-val");
         cmedname.classList.remove("hide");
         
         const ccantdosis = newelement.querySelector("#cantDosis");
         ccantdosis.id = `cantDosis-${idcount}`;
+        ccantdosis.name = `cantDosis-${idcount}`;
         ccantdosis.classList.add("cant-dosis-val");
         ccantdosis.classList.remove("hide");
         
         const chorario = newelement.querySelector("#horario");
         chorario.id = `horario-${idcount}`;
+        chorario.name = `horario-${idcount}`;
         chorario.classList.add("horario-val");
         chorario.classList.remove("hide");
         
@@ -163,6 +167,10 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Insertar el nuevo elemento antes de lastrow
         idlist.push(idcount);
+        console.log(idlist)
+
+        identificadoresInput.value = idlist.join(",");
+
         lastrow.parentElement.insertBefore(newelement, lastrow);
     });
     
